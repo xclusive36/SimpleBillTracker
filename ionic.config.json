@@ -1,0 +1,7 @@
+{
+  "name": "Simple Bill Tracker",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react-vite"
+}
