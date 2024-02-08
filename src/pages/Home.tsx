@@ -26,7 +26,7 @@ import { Storage } from "@ionic/storage";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
 
 const store = new Storage(); // Create a new instance of the Storage class
-await store.create(); // Create the storage of the device if it doesn't exist
+store.create(); // Create the storage of the device if it doesn't exist
 
 const Home: React.FC = () => {
   const [debugInfo, setDebugInfo] = useState<string>(""); // Create a new state called debugInfo and set it as an empty string
