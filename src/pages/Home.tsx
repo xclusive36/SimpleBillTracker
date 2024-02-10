@@ -24,6 +24,9 @@ import { convertDateToString } from "../utils/convertDateToString";
 import { Bill } from "../interfaces/interfaces";
 import { Storage } from "@ionic/storage";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
+import { Divider } from "../components/Divider";
+import { NoBills } from "../components/NoBills";
+import { BillItem } from "../components/BillItem";
 
 const store = new Storage(); // Create a new instance of the Storage class
 store.create(); // Create the storage of the device if it doesn't exist
@@ -239,308 +242,72 @@ const Home: React.FC = () => {
           </IonToolbar>
         </IonHeader>
         <IonList>
-          <IonItemDivider
-            color="light"
-            sticky
-            style={{
-              borderTop: "1px solid #ddd",
-              borderBottom: "1px solid #ddd",
-            }}
-          >
-            <IonLabel>
-              <small>Due Today</small>
-            </IonLabel>
-          </IonItemDivider>
+          <Divider title="Due Today" />
           {todaysBills.length === 0 ? (
-            <IonItem lines="none">
-              <IonLabel>
-                <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                  No Bills Due Today
-                </IonCardTitle>
-              </IonLabel>
-            </IonItem>
+            <NoBills title="No Bills Due Today" />
           ) : (
             todaysBills.map((bill, index) => (
-              <IonItemSliding key={index} ref={todaysBillsRef}>
-                <IonItemOptions
-                  side="start"
-                  onIonSwipe={() => {
-                    setBillAsPaid(bill);
-                    todaysBillsRef.current?.closeOpened();
-                  }}
-                >
-                  <IonItemOption
-                    color="success"
-                    onClick={() => {
-                      setBillAsPaid(bill);
-                      todaysBillsRef.current?.closeOpened();
-                    }}
-                  >
-                    Archive
-                  </IonItemOption>
-                </IonItemOptions>
-                <IonItem
-                  lines={index === todaysBills.length - 1 ? "none" : "inset"}
-                >
-                  <IonLabel>
-                    <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                      {bill.name}
-                    </IonCardTitle>
-                    <small>{bill.type}</small>
-                  </IonLabel>
-                  <IonText slot="end">
-                    <IonCardTitle
-                      className="ion-text-right"
-                      style={{ fontSize: "1rem" }}
-                    >
-                      ${bill.amount}
-                    </IonCardTitle>
-                    <small>{convertDateToString(bill.dueDate)}</small>
-                  </IonText>
-                </IonItem>
-                <IonItemOptions side="end">
-                  <IonItemOption
-                    color="secondary"
-                    onClick={() => presentAlertUpdate(bill)}
-                  >
-                    Update
-                  </IonItemOption>
-                  <IonItemOption
-                    color="danger"
-                    onClick={() => deleteBill(bill)}
-                  >
-                    Delete
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
+              <BillItem
+                key={index}
+                index={index}
+                itemRef={todaysBillsRef}
+                setArchiveState={setBillAsPaid}
+                bill={bill}
+                billArray={todaysBills}
+                updateBill={updateBill}
+                deleteBill={deleteBill}
+              />
             ))
           )}
-          <IonItemDivider
-            color="light"
-            sticky
-            style={{
-              borderTop: "1px solid #ddd",
-              borderBottom: "1px solid #ddd",
-            }}
-          >
-            <IonLabel>
-              <small>Upcoming Bills</small>
-            </IonLabel>
-          </IonItemDivider>
+          <Divider title="Upcoming Bills" />
           {upcomingBills.length === 0 ? (
-            <IonItem lines="none">
-              <IonLabel>
-                <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                  No Upcoming Bills
-                </IonCardTitle>
-              </IonLabel>
-            </IonItem>
+            <NoBills title="No Upcoming Bills" />
           ) : (
             upcomingBills.map((bill, index) => (
-              <IonItemSliding key={index} ref={upcomingBillsRef}>
-                <IonItemOptions
-                  side="start"
-                  onIonSwipe={() => {
-                    setBillAsPaid(bill);
-                    upcomingBillsRef.current?.closeOpened();
-                  }}
-                >
-                  <IonItemOption
-                    color="success"
-                    onClick={() => {
-                      setBillAsPaid(bill);
-                      upcomingBillsRef.current?.closeOpened();
-                    }}
-                  >
-                    Archive
-                  </IonItemOption>
-                </IonItemOptions>
-                <IonItem
-                  lines={index === upcomingBills.length - 1 ? "none" : "inset"}
-                >
-                  <IonLabel>
-                    <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                      {bill.name}
-                    </IonCardTitle>
-                    <small>{bill.type}</small>
-                  </IonLabel>
-                  <IonText slot="end">
-                    <IonCardTitle
-                      className="ion-text-right"
-                      style={{ fontSize: "1rem" }}
-                    >
-                      ${bill.amount}
-                    </IonCardTitle>
-                    <small>{convertDateToString(bill.dueDate)}</small>
-                  </IonText>
-                </IonItem>
-                <IonItemOptions side="end">
-                  <IonItemOption
-                    color="secondary"
-                    onClick={() => presentAlertUpdate(bill)}
-                  >
-                    Update
-                  </IonItemOption>
-                  <IonItemOption
-                    color="danger"
-                    onClick={() => deleteBill(bill)}
-                  >
-                    Delete
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
+              <BillItem
+                key={index}
+                index={index}
+                itemRef={upcomingBillsRef}
+                setArchiveState={setBillAsPaid}
+                bill={bill}
+                billArray={upcomingBills}
+                updateBill={updateBill}
+                deleteBill={deleteBill}
+              />
             ))
           )}
-          <IonItemDivider
-            color="light"
-            sticky
-            style={{
-              borderTop: "1px solid #ddd",
-              borderBottom: "1px solid #ddd",
-            }}
-          >
-            <IonLabel>
-              <small>Past Due Bills</small>
-            </IonLabel>
-          </IonItemDivider>
+          <Divider title="Past Due Bills" />
           {pastDueBills.length === 0 ? (
-            <IonItem lines="none">
-              <IonLabel>
-                <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                  No Past Due Bills
-                </IonCardTitle>
-              </IonLabel>
-            </IonItem>
+            <NoBills title="No Past Due Bills" />
           ) : (
             pastDueBills.map((bill, index) => (
-              <IonItemSliding key={index} ref={pastDueBillsRef}>
-                <IonItemOptions
-                  side="start"
-                  onIonSwipe={() => {
-                    setBillAsPaid(bill);
-                    pastDueBillsRef.current?.closeOpened();
-                  }}
-                >
-                  <IonItemOption
-                    color="success"
-                    onClick={() => {
-                      setBillAsPaid(bill);
-                      pastDueBillsRef.current?.closeOpened();
-                    }}
-                  >
-                    Archive
-                  </IonItemOption>
-                </IonItemOptions>
-                <IonItem
-                  lines={index === pastDueBills.length - 1 ? "none" : "inset"}
-                >
-                  <IonLabel>
-                    <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                      {bill.name}
-                    </IonCardTitle>
-                    <small>{bill.type}</small>
-                  </IonLabel>
-                  <IonText slot="end">
-                    <IonCardTitle
-                      className="ion-text-right"
-                      style={{ fontSize: "1rem" }}
-                    >
-                      ${bill.amount}
-                    </IonCardTitle>
-                    <small>{convertDateToString(bill.dueDate)}</small>
-                  </IonText>
-                </IonItem>
-                <IonItemOptions side="end">
-                  <IonItemOption
-                    color="secondary"
-                    onClick={() => presentAlertUpdate(bill)}
-                  >
-                    Update
-                  </IonItemOption>
-                  <IonItemOption
-                    color="danger"
-                    onClick={() => deleteBill(bill)}
-                  >
-                    Delete
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
+              <BillItem
+                key={index}
+                index={index}
+                itemRef={pastDueBillsRef}
+                setArchiveState={setBillAsPaid}
+                bill={bill}
+                billArray={pastDueBills}
+                updateBill={updateBill}
+                deleteBill={deleteBill}
+              />
             ))
           )}
-          <IonItemDivider
-            color="light"
-            sticky
-            style={{
-              borderTop: "1px solid #ddd",
-              borderBottom: "1px solid #ddd",
-            }}
-          >
-            <IonLabel>
-              <small>Paid Bills</small>
-            </IonLabel>
-          </IonItemDivider>
+          <Divider title="Paid Bills" />
           {paidBills.length === 0 ? (
-            <IonItem lines="none">
-              <IonLabel>
-                <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                  No Paid Bills
-                </IonCardTitle>
-              </IonLabel>
-            </IonItem>
+            <NoBills title="No Paid Bills" />
           ) : (
             paidBills.map((bill, index) => (
-              <IonItemSliding key={index} ref={paidBillsRef}>
-                <IonItemOptions
-                  side="start"
-                  onIonSwipe={() => {
-                    setBillAsPaid(bill);
-                    paidBillsRef.current?.closeOpened();
-                  }}
-                >
-                  <IonItemOption
-                    color="success"
-                    onClick={() => {
-                      setBillAsPaid(bill);
-                      paidBillsRef.current?.closeOpened();
-                    }}
-                  >
-                    UnArchive
-                  </IonItemOption>
-                </IonItemOptions>
-                <IonItem
-                  lines={index === paidBills.length - 1 ? "none" : "inset"}
-                >
-                  <IonLabel>
-                    <IonCardTitle style={{ fontSize: "1.25rem" }}>
-                      {bill.name}
-                    </IonCardTitle>
-                    <small>{bill.type}</small>
-                  </IonLabel>
-                  <IonText slot="end">
-                    <IonCardTitle
-                      className="ion-text-right"
-                      style={{ fontSize: "1rem" }}
-                    >
-                      ${bill.amount}
-                    </IonCardTitle>
-                    <small>{convertDateToString(bill.dueDate)}</small>
-                  </IonText>
-                </IonItem>
-                <IonItemOptions side="end">
-                  <IonItemOption
-                    color="secondary"
-                    onClick={() => presentAlertUpdate(bill)}
-                  >
-                    Update
-                  </IonItemOption>
-                  <IonItemOption
-                    color="danger"
-                    onClick={() => deleteBill(bill)}
-                  >
-                    Delete
-                  </IonItemOption>
-                </IonItemOptions>
-              </IonItemSliding>
+              <BillItem
+                key={index}
+                index={index}
+                itemRef={paidBillsRef}
+                setArchiveState={setBillAsPaid}
+                bill={bill}
+                billArray={paidBills}
+                updateBill={updateBill}
+                deleteBill={deleteBill}
+              />
             ))
           )}
         </IonList>
