@@ -1,18 +1,10 @@
 import {
   IonButton,
-  IonCardTitle,
   IonContent,
   IonFooter,
   IonHeader,
-  IonItem,
-  IonItemDivider,
-  IonItemOption,
-  IonItemOptions,
-  IonItemSliding,
-  IonLabel,
   IonList,
   IonPage,
-  IonText,
   IonTitle,
   IonToolbar,
   useIonAlert,
@@ -20,7 +12,6 @@ import {
 } from "@ionic/react";
 import "./Home.css";
 import { useEffect, useRef, useState } from "react";
-import { convertDateToString } from "../utils/convertDateToString";
 import { Bill } from "../interfaces/interfaces";
 import { Storage } from "@ionic/storage";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
@@ -175,57 +166,6 @@ const Home: React.FC = () => {
     await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
     setSortedDataToState(updatedBills); // Set the sorted data to state
     presentToast("bottom", "Bill updated successfully");
-  };
-
-  const presentAlertUpdate = (bill: Bill) => {
-    presentAlert({
-      header: "Update Bill",
-      inputs: [
-        {
-          placeholder: "Bill Name",
-          id: "name",
-          value: bill.name,
-        },
-        {
-          placeholder: "Bill Category",
-          id: "type",
-          value: bill.type,
-        },
-        {
-          type: "number",
-          placeholder: "Minimum amount owed",
-          min: 1,
-          id: "amount",
-          value: bill.amount,
-        },
-        {
-          type: "date",
-          id: "dueDate",
-          value: bill.dueDate,
-        },
-      ],
-      buttons: [
-        {
-          text: "Cancel",
-          role: "cancel",
-        },
-        {
-          text: "OK",
-          role: "confirm",
-          handler: (data) => {
-            const billObj: Bill = {
-              id: bill.id,
-              name: data[0],
-              type: data[1],
-              amount: data[2],
-              dueDate: data[3],
-              paid: bill.paid,
-            };
-            updateBill(billObj);
-          },
-        },
-      ],
-    });
   };
 
   return (
