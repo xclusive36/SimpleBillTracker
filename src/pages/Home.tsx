@@ -23,7 +23,6 @@ const store = new Storage(); // Create a new instance of the Storage class
 store.create(); // Create the storage of the device if it doesn't exist
 
 const Home: React.FC = () => {
-  const [debugInfo, setDebugInfo] = useState<string>(""); // Create a new state called debugInfo and set it as an empty string
   // Create a new functional component called Home
   const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook
@@ -70,25 +69,27 @@ const Home: React.FC = () => {
   }, []); // Run the effect only once when the component mounts
 
   const presentToast = (
-    position: "top" | "middle" | "bottom",
-    message: string
+    // Create a new function called presentToast
+    position: "top" | "middle" | "bottom", // Create a new parameter called position and set it to a string
+    message: string // Create a new parameter called message and set it to a string
   ) => {
     present({
-      message: message,
-      duration: 1500,
-      position: position,
-      color: "dark",
+      // Call the present function from the useIonToast hook
+      message: message, // Set the message of the toast to the message parameter
+      duration: 1500, // Set the duration of the toast to 1500ms
+      position: position, // Set the position of the toast to the position parameter
+      color: "dark", // Set the color of the toast to dark
     });
   };
 
   const addBill = async (newBill: Bill) => {
-    setDebugInfo(JSON.stringify(newBill));
+    // Create a new function called addBill
     // Create a new asynchronous function called addBill
     const bills = await getStoredData(); // Get the bills object from the storage of the device
     const newBills = [...bills, newBill]; // Create a new array with the new bill added to the existing bills array
     await store.set("mybills", newBills); // Set the new bills array to the storage of the device
     setSortedDataToState(newBills); // Set the sorted data to state
-    presentToast("bottom", "Bill added successfully");
+    presentToast("bottom", "Bill added successfully"); // Call the presentToast function
   };
 
   const updateBill = async (updatedBill: Bill) => {
@@ -96,15 +97,18 @@ const Home: React.FC = () => {
     const bills = await getStoredData(); // Get the bills object from the storage of the device
     // locate the bill in the bills by id array and update it
     const updatedBills = bills.map((bill: Bill) => {
+      // Create a new array with the updated bill
       if (bill.id === updatedBill.id) {
-        return updatedBill;
+        // If the bill id matches the updated bill id
+        return updatedBill; // Return the updated bill
       } else {
-        return bill;
+        // If the bill id doesn't match the updated bill id
+        return bill; // Return the bill as is
       }
     });
     await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
     setSortedDataToState(updatedBills); // Set the sorted data to state
-    presentToast("bottom", "Bill updated successfully");
+    presentToast("bottom", "Bill updated successfully"); // Call the presentToast function
     // close any open sliding items
     todaysBillsRef.current?.closeOpened();
     upcomingBillsRef.current?.closeOpened();
@@ -115,26 +119,31 @@ const Home: React.FC = () => {
   const deleteBill = async (deletedBill: Bill) => {
     // Create a new asynchronous function called deleteBill
     presentAlert({
-      header: "Delete Bill?",
-      message: "This action cannot be undone.",
+      // Call the presentAlert function
+      header: "Delete Bill?", // Set the header of the alert to "Delete Bill?"
+      message: "This action cannot be undone.", // Set the message of the alert to "This action cannot be undone."
       buttons: [
+        // Set the buttons of the alert
         {
           text: "Cancel",
           role: "cancel",
           handler: () => {
-            return;
+            // Create a new handler for the cancel button
+            return; // Return nothing
           },
         },
         {
           text: "Delete",
           handler: async () => {
+            // Create a new handler for the delete button
             const bills = await getStoredData(); // Get the bills object from the storage of the device
             const updatedBills = bills.filter(
+              // Create a new array with the deleted bill removed from the existing bills array
               (bill: Bill) => bill.id !== deletedBill.id
             ); // Create a new array with the deleted bill removed from the existing bills array
             await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
             setSortedDataToState(updatedBills); // Set the sorted data to state
-            presentToast("bottom", "Bill deleted successfully");
+            presentToast("bottom", "Bill deleted successfully"); // Call the presentToast function
             // close any open sliding items
             todaysBillsRef.current?.closeOpened();
             upcomingBillsRef.current?.closeOpened();
@@ -148,24 +157,27 @@ const Home: React.FC = () => {
 
   const deleteBillsFromStorage = async () => {
     // Delete the bills object from the storage of the device
-    await store.remove("mybills");
-    store.clear(); // Clear the storage of the device
-    presentToast("bottom", "Bills cleared from storage successfully");
+    await store.remove("mybills"); // Remove the bills object from the storage of the device
+    store.clear(); // Clear the storage of the device to remove any remaining data
+    presentToast("bottom", "Bills cleared from storage successfully"); // Call the presentToast function
   };
 
   const setBillAsPaid = async (bill: Bill) => {
     // Create a new asynchronous function called setBillAsPaid
     const bills = await getStoredData(); // Get the bills object from the storage of the device
     const updatedBills = bills.map((b: Bill) => {
+      // Create a new array with the updated bill
       if (b.id === bill.id) {
-        return { ...b, paid: !b.paid };
+        // If the bill id matches the updated bill id
+        return { ...b, paid: !b.paid }; // Return the updated bill with the paid property set to the opposite of the current paid property
       } else {
-        return b;
+        // If the bill id doesn't match the updated bill id
+        return b; // Return the bill as is
       }
     });
     await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
     setSortedDataToState(updatedBills); // Set the sorted data to state
-    presentToast("bottom", "Bill updated successfully");
+    presentToast("bottom", "Bill updated successfully"); // Call the presentToast function
   };
 
   return (
@@ -254,7 +266,6 @@ const Home: React.FC = () => {
         {/* <IonButton expand="full" onClick={deleteBillsFromStorage}>
           Delete Bills from Storage
         </IonButton> */}
-        {debugInfo}
       </IonContent>
       <IonFooter>
         <IonToolbar>
