@@ -15,15 +15,17 @@ import { useEffect, useRef, useState } from "react";
 import { Bill } from "../interfaces/interfaces";
 import { Storage } from "@ionic/storage";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
-import { Divider } from "../components/Divider";
-import { NoBills } from "../components/NoBills";
-import { BillItem } from "../components/BillItem";
+import { Sidemenu } from "../components/Sidemenu";
+import { Stats } from "../components/Stats";
+import { hapticsImpactLight } from "../capacitor/haptics";
+import { Header } from "../components/Header";
+import { Search } from "../components/Search";
+import { BillList } from "../components/BillList";
 
 const store = new Storage(); // Create a new instance of the Storage class
 store.create(); // Create the storage of the device if it doesn't exist
 
 const Home: React.FC = () => {
-  // Create a new functional component called Home
   const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook
   const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
@@ -32,7 +34,7 @@ const Home: React.FC = () => {
   const paidBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the paidBills item
 
   const getStoredData = async () => {
-    // Create a new asynchronous function called getStoredData
+    // This function gets the bills object from the storage of the device and returns it
     const data = await store.get("mybills"); // Get the bills object from the storage of the device
 
     if (data) {
@@ -50,6 +52,8 @@ const Home: React.FC = () => {
   const [pastDueBills, setPastDueBills] = useState<Bill[]>([]); // Create a new state called pastDueBills and set it to an empty array
   const [paidBills, setPaidBills] = useState<Bill[]>([]); // Create a new state called paidBills and set it to an empty array
 
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Create a new state called categorySearchTerm and set it to an empty string
+
   const setSortedDataToState = async (data: Bill[]) => {
     const sortedData = sortSetArraysByDate(data); // Call the sortSetArraysByDate function and assign the returned object to a variable
 
@@ -60,7 +64,6 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    // Create a new effect using the useEffect hook
     getStoredData() // Call the getStoredData function to get the bills object from the storage of the device
       .then((data) => {
         // If the data exists (i.e. the bills array of objects exists in the storage of the device)
@@ -69,7 +72,7 @@ const Home: React.FC = () => {
   }, []); // Run the effect only once when the component mounts
 
   const presentToast = (
-    // Create a new function called presentToast
+    // This function presents a toast with a message and a position
     position: "top" | "middle" | "bottom", // Create a new parameter called position and set it to a string
     message: string // Create a new parameter called message and set it to a string
   ) => {
@@ -83,8 +86,14 @@ const Home: React.FC = () => {
   };
 
   const addBill = async (newBill: Bill) => {
-    // Create a new function called addBill
-    // Create a new asynchronous function called addBill
+    // This function adds a new bill to the bills object in the storage of the device and sets the sorted data to state
+
+    // Check if the newBill object has all the required properties
+    if (!newBill.name || !newBill.type || !newBill.amount || !newBill.dueDate) {
+      presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
+      return; // Return nothing
+    }
+
     const bills = await getStoredData(); // Get the bills object from the storage of the device
     const newBills = [...bills, newBill]; // Create a new array with the new bill added to the existing bills array
     await store.set("mybills", newBills); // Set the new bills array to the storage of the device
@@ -93,7 +102,19 @@ const Home: React.FC = () => {
   };
 
   const updateBill = async (updatedBill: Bill) => {
-    // Create a new asynchronous function called updateBill
+    // This function updates a bill in the bills object in the storage of the device and sets the sorted data to state
+
+    // Check if the updatedBill object has all the required properties
+    if (
+      !updatedBill.name ||
+      !updatedBill.type ||
+      !updatedBill.amount ||
+      !updatedBill.dueDate
+    ) {
+      presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
+      return; // Return nothing
+    }
+
     const bills = await getStoredData(); // Get the bills object from the storage of the device
     // locate the bill in the bills by id array and update it
     const updatedBills = bills.map((bill: Bill) => {
@@ -117,7 +138,7 @@ const Home: React.FC = () => {
   };
 
   const deleteBill = async (deletedBill: Bill) => {
-    // Create a new asynchronous function called deleteBill
+    // This function deletes a bill from the bills object in the storage of the device and sets the sorted data to state
     presentAlert({
       // Call the presentAlert function
       header: "Delete Bill?", // Set the header of the alert to "Delete Bill?"
@@ -129,6 +150,7 @@ const Home: React.FC = () => {
           role: "cancel",
           handler: () => {
             // Create a new handler for the cancel button
+            hapticsImpactLight(); // Trigger a light haptic feedback
             return; // Return nothing
           },
         },
@@ -149,21 +171,15 @@ const Home: React.FC = () => {
             upcomingBillsRef.current?.closeOpened();
             pastDueBillsRef.current?.closeOpened();
             paidBillsRef.current?.closeOpened();
+            hapticsImpactLight(); // Trigger a light haptic feedback
           },
         },
       ],
     });
   };
 
-  const deleteBillsFromStorage = async () => {
-    // Delete the bills object from the storage of the device
-    await store.remove("mybills"); // Remove the bills object from the storage of the device
-    store.clear(); // Clear the storage of the device to remove any remaining data
-    presentToast("bottom", "Bills cleared from storage successfully"); // Call the presentToast function
-  };
-
   const setBillAsPaid = async (bill: Bill) => {
-    // Create a new asynchronous function called setBillAsPaid
+    // This function sets a bill as paid in the bills object in the storage of the device and sets the sorted data to state
     const bills = await getStoredData(); // Get the bills object from the storage of the device
     const updatedBills = bills.map((b: Bill) => {
       // Create a new array with the updated bill
@@ -181,148 +197,130 @@ const Home: React.FC = () => {
   };
 
   return (
-    <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Simple Bill Tracker</IonTitle>
-        </IonToolbar>
-      </IonHeader>
-      <IonContent fullscreen>
-        <IonHeader collapse="condense">
+    <>
+      <Sidemenu store={store} />
+      <IonPage id="main-content">
+        <Header />
+        <IonContent fullscreen>
+          <IonHeader collapse="condense">
+            <IonToolbar>
+              <IonTitle size="large">Simple Bill Tracker</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <Stats
+            todaysBills={todaysBills}
+            upcomingBills={upcomingBills}
+            pastDueBills={pastDueBills}
+            paidBills={paidBills}
+          />
+          <IonList>
+            <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+            <BillList
+              billArray={todaysBills}
+              searchTerm={searchTerm}
+              billRef={todaysBillsRef}
+              setBillAsPaid={setBillAsPaid}
+              updateBill={updateBill}
+              deleteBill={deleteBill}
+              dividerTitle="Due Today"
+              noBillsTitle="No Bills Due Today"
+              color="warning"
+            />
+            <BillList
+              billArray={upcomingBills}
+              searchTerm={searchTerm}
+              billRef={upcomingBillsRef}
+              setBillAsPaid={setBillAsPaid}
+              updateBill={updateBill}
+              deleteBill={deleteBill}
+              dividerTitle="Upcoming Bills"
+              noBillsTitle="No Upcoming Bills"
+            />
+            <BillList
+              billArray={pastDueBills}
+              searchTerm={searchTerm}
+              billRef={pastDueBillsRef}
+              setBillAsPaid={setBillAsPaid}
+              updateBill={updateBill}
+              deleteBill={deleteBill}
+              dividerTitle="Past Due Bills"
+              noBillsTitle="No Past Due Bills"
+              color="danger"
+            />
+            <BillList
+              billArray={paidBills}
+              searchTerm={searchTerm}
+              billRef={paidBillsRef}
+              setBillAsPaid={setBillAsPaid}
+              updateBill={updateBill}
+              deleteBill={deleteBill}
+              dividerTitle="Paid Bills"
+              noBillsTitle="No Paid Bills"
+              color="success"
+            />
+          </IonList>
+        </IonContent>
+        <IonFooter>
           <IonToolbar>
-            <IonTitle size="large">Simple Bill Tracker</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonList>
-          <Divider title="Due Today" />
-          {todaysBills.length === 0 ? (
-            <NoBills title="No Bills Due Today" />
-          ) : (
-            todaysBills.map((bill, index) => (
-              <BillItem
-                key={index}
-                index={index}
-                itemRef={todaysBillsRef}
-                setArchiveState={setBillAsPaid}
-                bill={bill}
-                billArray={todaysBills}
-                updateBill={updateBill}
-                deleteBill={deleteBill}
-              />
-            ))
-          )}
-          <Divider title="Upcoming Bills" />
-          {upcomingBills.length === 0 ? (
-            <NoBills title="No Upcoming Bills" />
-          ) : (
-            upcomingBills.map((bill, index) => (
-              <BillItem
-                key={index}
-                index={index}
-                itemRef={upcomingBillsRef}
-                setArchiveState={setBillAsPaid}
-                bill={bill}
-                billArray={upcomingBills}
-                updateBill={updateBill}
-                deleteBill={deleteBill}
-              />
-            ))
-          )}
-          <Divider title="Past Due Bills" />
-          {pastDueBills.length === 0 ? (
-            <NoBills title="No Past Due Bills" />
-          ) : (
-            pastDueBills.map((bill, index) => (
-              <BillItem
-                key={index}
-                index={index}
-                itemRef={pastDueBillsRef}
-                setArchiveState={setBillAsPaid}
-                bill={bill}
-                billArray={pastDueBills}
-                updateBill={updateBill}
-                deleteBill={deleteBill}
-              />
-            ))
-          )}
-          <Divider title="Paid Bills" />
-          {paidBills.length === 0 ? (
-            <NoBills title="No Paid Bills" />
-          ) : (
-            paidBills.map((bill, index) => (
-              <BillItem
-                key={index}
-                index={index}
-                itemRef={paidBillsRef}
-                setArchiveState={setBillAsPaid}
-                bill={bill}
-                billArray={paidBills}
-                updateBill={updateBill}
-                deleteBill={deleteBill}
-              />
-            ))
-          )}
-        </IonList>
-        {/* <IonButton expand="full" onClick={deleteBillsFromStorage}>
-          Delete Bills from Storage
-        </IonButton> */}
-      </IonContent>
-      <IonFooter>
-        <IonToolbar>
-          <IonButton
-            expand="full"
-            onClick={() =>
-              presentAlert({
-                header: "Add a Bill",
-                inputs: [
-                  {
-                    placeholder: "Bill Name",
-                    id: "name",
-                  },
-                  {
-                    placeholder: "Bill Category",
-                    id: "type",
-                  },
-                  {
-                    type: "number",
-                    placeholder: "Minimum amount owed",
-                    min: 1,
-                    id: "amount",
-                  },
-                  {
-                    type: "date",
-                    id: "dueDate",
-                  },
-                ],
-                buttons: [
-                  {
-                    text: "Cancel",
-                    role: "cancel",
-                  },
-                  {
-                    text: "OK",
-                    role: "confirm",
-                    handler: (data) => {
-                      const bill: Bill = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        name: data[0],
-                        type: data[1],
-                        amount: data[2],
-                        dueDate: data[3],
-                        paid: false,
-                      };
-                      addBill(bill);
+            <IonButton
+              expand="full"
+              onClick={() => {
+                hapticsImpactLight(); // Trigger a light haptic feedback
+                presentAlert({
+                  // Call the presentAlert function to present an alert
+                  header: "Add a Bill",
+                  inputs: [
+                    {
+                      placeholder: "Bill Name",
+                      id: "name",
                     },
-                  },
-                ],
-              })
-            }
-          >
-            Add Bill
-          </IonButton>
-        </IonToolbar>
-      </IonFooter>
-    </IonPage>
+                    {
+                      placeholder: "Bill Category",
+                      id: "type",
+                    },
+                    {
+                      type: "number",
+                      placeholder: "Minimum amount owed",
+                      min: 1,
+                      id: "amount",
+                    },
+                    {
+                      type: "date",
+                      id: "dueDate",
+                    },
+                  ],
+                  buttons: [
+                    {
+                      text: "Cancel",
+                      role: "cancel",
+                      handler: () => hapticsImpactLight(), // Trigger a light haptic feedback
+                    },
+                    {
+                      text: "OK",
+                      role: "confirm",
+                      handler: (data) => {
+                        hapticsImpactLight(); // Trigger a light haptic feedback
+                        const bill: Bill = {
+                          id: Math.random().toString(36).substr(2, 9),
+                          name: data[0],
+                          type: data[1],
+                          amount: data[2],
+                          dueDate: data[3],
+                          paid: false,
+                        };
+                        addBill(bill);
+                      },
+                    },
+                  ],
+                });
+              }}
+            >
+              Add Bill
+            </IonButton>
+          </IonToolbar>
+        </IonFooter>
+      </IonPage>
+    </>
   );
 };
 

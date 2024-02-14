@@ -11,6 +11,7 @@ import {
 import { ReactNode } from "react";
 import { Bill } from "../interfaces/interfaces";
 import { convertDateToString } from "../utils/convertDateToString";
+import { hapticsImpactLight } from "../capacitor/haptics";
 
 interface Props {
   index: number;
@@ -20,6 +21,7 @@ interface Props {
   billArray: Bill[];
   updateBill: (bill: Bill) => void;
   deleteBill: (bill: Bill) => void;
+  color?: string;
 }
 
 export const BillItem: React.FC<Props> = ({
@@ -30,6 +32,7 @@ export const BillItem: React.FC<Props> = ({
   billArray,
   updateBill,
   deleteBill,
+  color,
 }) => {
   const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
 
@@ -64,11 +67,13 @@ export const BillItem: React.FC<Props> = ({
         {
           text: "Cancel",
           role: "cancel",
+          handler: () => hapticsImpactLight(), // Trigger a light haptic feedback
         },
         {
           text: "OK",
           role: "confirm",
           handler: (data) => {
+            hapticsImpactLight(); // Trigger a light haptic feedback
             const billObj: Bill = {
               id: bill.id,
               name: data[0],
@@ -89,6 +94,7 @@ export const BillItem: React.FC<Props> = ({
       <IonItemOptions
         side="start"
         onIonSwipe={() => {
+          hapticsImpactLight(); // Trigger a light haptic feedback
           setArchiveState(bill);
           itemRef.current?.closeOpened();
         }}
@@ -96,6 +102,7 @@ export const BillItem: React.FC<Props> = ({
         <IonItemOption
           color="success"
           onClick={() => {
+            hapticsImpactLight(); // Trigger a light haptic feedback
             setArchiveState(bill);
             itemRef.current?.closeOpened();
           }}
@@ -111,8 +118,12 @@ export const BillItem: React.FC<Props> = ({
           <small>{bill.type}</small>
         </IonLabel>
         <IonText slot="end">
-          <IonCardTitle className="ion-text-right" style={{ fontSize: "1rem" }}>
-            ${bill.amount}
+          <IonCardTitle
+            className="ion-text-right"
+            style={{ fontSize: "1rem" }}
+            color={color || "primary"}
+          >
+            ${Number(bill.amount)}
           </IonCardTitle>
           <small>{convertDateToString(bill.dueDate)}</small>
         </IonText>
@@ -120,11 +131,20 @@ export const BillItem: React.FC<Props> = ({
       <IonItemOptions side="end">
         <IonItemOption
           color="secondary"
-          onClick={() => presentAlertUpdate(bill)}
+          onClick={() => {
+            hapticsImpactLight(); // Trigger a light haptic feedback
+            presentAlertUpdate(bill);
+          }}
         >
           Update
         </IonItemOption>
-        <IonItemOption color="danger" onClick={() => deleteBill(bill)}>
+        <IonItemOption
+          color="danger"
+          onClick={() => {
+            hapticsImpactLight(); // Trigger a light haptic feedback
+            deleteBill(bill);
+          }}
+        >
           Delete
         </IonItemOption>
       </IonItemOptions>
