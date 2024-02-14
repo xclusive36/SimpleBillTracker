@@ -18,6 +18,7 @@ import {
   shieldCheckmarkOutline,
   sparklesOutline,
 } from "ionicons/icons";
+import { strings } from "../language/language";
 
 interface Props {
   store: any;
@@ -50,8 +51,8 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
 
     presentAlert({
       // Call the presentAlert function
-      header: "Clear all data?", // Set the header of the alert to "Delete Bill?"
-      message: "This action cannot be undone.", // Set the message of the alert to "This action cannot be undone."
+      header: strings.REMOVE_ALL_DATA, // Set the header of the alert to "Delete Bill?"
+      message: strings.RESET_SUBHEADER, // Set the message of the alert to "This action cannot be undone."
       buttons: [
         // Set the buttons of the alert
         {
@@ -91,19 +92,19 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
           <strong>
             <IonItem onClick={closeMenu} routerLink="/home">
               <IonIcon slot="start" icon={fileTrayFullOutline} />
-              <IonLabel>Home</IonLabel>
+              <IonLabel>{strings.HOME}</IonLabel>
             </IonItem>
             <IonItem onClick={closeMenu} routerLink="/tos">
               <IonIcon slot="start" icon={shieldCheckmarkOutline} />
-              <IonLabel>Terms of Use</IonLabel>
+              <IonLabel>{strings.TERMS_OF_USE}</IonLabel>
             </IonItem>
             <IonItem onClick={closeMenu} routerLink="/privacy">
               <IonIcon slot="start" icon={shieldCheckmarkOutline} />
-              <IonLabel>Privacy Policy</IonLabel>
+              <IonLabel>{strings.PRIVACY_POLICY}</IonLabel>
             </IonItem>
             <IonItem onClick={deleteBillsFromStorage}>
               <IonIcon slot="start" icon={sparklesOutline} />
-              <IonLabel>Clear Data</IonLabel>
+              <IonLabel>{strings.CLEAR_DATA}</IonLabel>
             </IonItem>
           </strong>
         </IonList>

@@ -5,6 +5,7 @@ import {
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
+import { strings } from "../language/language";
 
 export const Header: React.FC = () => {
   return (
@@ -13,7 +14,7 @@ export const Header: React.FC = () => {
         <IonButtons slot="start">
           <IonMenuButton></IonMenuButton>
         </IonButtons>
-        <IonTitle>Simple Bill Tracker</IonTitle>
+        <IonTitle>{strings.TITLE}</IonTitle>
       </IonToolbar>
     </IonHeader>
   );

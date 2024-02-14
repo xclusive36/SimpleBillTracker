@@ -1,5 +1,6 @@
 import { IonItem, IonSearchbar } from "@ionic/react";
 import { hapticsImpactLight } from "../capacitor/haptics";
+import { strings } from "../language/language";
 
 interface Props {
   searchTerm: string;
@@ -10,7 +11,7 @@ export const Search: React.FC<Props> = ({ searchTerm, setSearchTerm }) => {
   return (
     <IonItem lines="none">
       <IonSearchbar
-        placeholder="Search for a bill"
+        placeholder={strings.SEARCH_PLACEHOLDER}
         value={searchTerm}
         onIonInput={(e) => {
           hapticsImpactLight(); // Haptic feedback

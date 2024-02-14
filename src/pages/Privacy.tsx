@@ -13,6 +13,7 @@ import {
 import { Header } from "../components/Header";
 
 import "./Privacy.css";
+import { strings } from "../language/language";
 
 const Privacy: React.FC = () => {
   const values = ["first", "second", "third", "fourth", "fifth"];
@@ -50,98 +51,53 @@ const Privacy: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Privacy Policy</IonTitle>
+            <IonTitle size="large">{strings.PRIVACY_POLICY}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonAccordionGroup onIonChange={accordionGroupChange}>
           <IonAccordion value="first">
             <IonItem id="first" slot="header" color="light">
-              <IonLabel>Introduction</IonLabel>
+              <IonLabel>{strings.PRIVACY_POLICY}</IonLabel>
             </IonItem>
             <div className="ion-padding" slot="content">
-              <p>
-                This Privacy Policy is meant to help you understand what
-                information we collect, why we collect it, and how you can
-                update, manage, export, and delete your information.
-              </p>
+              <p>{strings.PRIVACY_POLICY_TEXT_1}</p>
             </div>
           </IonAccordion>
           <IonAccordion value="second">
             <IonItem id="second" slot="header" color="light">
-              <IonLabel>Information we collect</IonLabel>
+              <IonLabel>{strings.PRIVACY_POLICY_TEXT_2}</IonLabel>
             </IonItem>
             <div className="ion-padding" slot="content">
-              <p>
-                What ever data you create within the application its self, you
-                have full control over. It’s your data to Add, Edit, or Delete.
-                If you do not wish to store any information, simply delete it
-                off of the application. We want you to understand that you are
-                in control of your data.
-              </p>
+              <p>{strings.PRIVACY_POLICY_TEXT_3}</p>
             </div>
           </IonAccordion>
           <IonAccordion value="third">
             <IonItem id="third" slot="header" color="light">
-              <IonLabel>Things you create or provide to us</IonLabel>
+              <IonLabel>{strings.PRIVACY_POLICY_TEXT_4}</IonLabel>
             </IonItem>
             <div className="ion-padding" slot="content">
-              <p>
-                When you create a LiteStep Account, you provide us with personal
-                information that includes your name and a email.
-              </p>
-              <p>
-                The content you add using the application is your own. We do not
-                assume ownership of any information you input into the
-                application.
-              </p>
+              <p>{strings.PRIVACY_POLICY_TEXT_5}</p>
+              <p>{strings.PRIVACY_POLICY_TEXT_6}</p>
             </div>
           </IonAccordion>
           <IonAccordion value="fourth">
             <IonItem id="fourth" slot="header" color="light">
-              <IonLabel>
-                Information we collect as you use our services
-              </IonLabel>
+              <IonLabel>{strings.PRIVACY_POLICY_TEXT_7}</IonLabel>
             </IonItem>
             <div className="ion-padding" slot="content">
-              <p>
-                We may collect crash or bug reports sent by the application
-                during usage.
-              </p>
-              <p>
-                We collect this information when a LiteStep service on your
-                device contacts our servers — for example, when you install an
-                app from the IOS App Store or when a service checks for
-                automatic updates.
-              </p>
+              <p>{strings.PRIVACY_POLICY_TEXT_8}</p>
+              <p>{strings.PRIVACY_POLICY_TEXT_9}</p>
             </div>
           </IonAccordion>
           <IonAccordion value="fifth">
             <IonItem id="fifth" slot="header" color="light">
-              <IonLabel>Why we collect data</IonLabel>
+              <IonLabel>{strings.PRIVACY_POLICY_TEXT_10}</IonLabel>
             </IonItem>
             <div className="ion-padding" slot="content">
-              <p>
-                We use your information to ensure our services are working as
-                intended, such as tracking outages or troubleshooting issues
-                that get report to us. We use that information to make
-                improvements to our services.
-              </p>
-              <p>
-                We use the information we collect in existing services to help
-                us develop new ones. We use the information we collect to
-                provide personalized content.
-              </p>
-              <p>
-                We don’t share information that personally identifies you with
-                advertisers, such as your name or email.
-              </p>
-              <p>
-                We use data for analytics and measurement to understand how our
-                services are used. For example, we analyze data about your
-                visits to our sites to do things like optimize product design.
-                We use a variety of tools to do this, including Google
-                Analytics.
-              </p>
+              <p>{strings.PRIVACY_POLICY_TEXT_11}</p>
+              <p>{strings.PRIVACY_POLICY_TEXT_12}</p>
+              <p>{strings.PRIVACY_POLICY_TEXT_13}</p>
+              <p>{strings.PRIVACY_POLICY_TEXT_14}</p>
             </div>
           </IonAccordion>
         </IonAccordionGroup>

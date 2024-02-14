@@ -12,6 +12,7 @@ import { ReactNode } from "react";
 import { Bill } from "../interfaces/interfaces";
 import { convertDateToString } from "../utils/convertDateToString";
 import { hapticsImpactLight } from "../capacitor/haptics";
+import { strings } from "../language/language";
 
 interface Props {
   index: number;
@@ -38,21 +39,21 @@ export const BillItem: React.FC<Props> = ({
 
   const presentAlertUpdate = (bill: Bill) => {
     presentAlert({
-      header: "Update Bill",
+      header: strings.ALERT_HEADER,
       inputs: [
         {
-          placeholder: "Bill Name",
+          placeholder: strings.ALERT_PLACEHOLDER_1,
           id: "name",
           value: bill.name,
         },
         {
-          placeholder: "Bill Category",
+          placeholder: strings.ALERT_PLACEHOLDER_2,
           id: "type",
           value: bill.type,
         },
         {
           type: "number",
-          placeholder: "Minimum amount owed",
+          placeholder: strings.ALERT_PLACEHOLDER_3,
           min: 1,
           id: "amount",
           value: bill.amount,
@@ -65,12 +66,12 @@ export const BillItem: React.FC<Props> = ({
       ],
       buttons: [
         {
-          text: "Cancel",
+          text: strings.ALERT_CANCEL,
           role: "cancel",
           handler: () => hapticsImpactLight(), // Trigger a light haptic feedback
         },
         {
-          text: "OK",
+          text: strings.ALERT_OKAY,
           role: "confirm",
           handler: (data) => {
             hapticsImpactLight(); // Trigger a light haptic feedback
@@ -136,7 +137,7 @@ export const BillItem: React.FC<Props> = ({
             presentAlertUpdate(bill);
           }}
         >
-          Update
+          {strings.UPDATE}
         </IonItemOption>
         <IonItemOption
           color="danger"
@@ -145,7 +146,7 @@ export const BillItem: React.FC<Props> = ({
             deleteBill(bill);
           }}
         >
-          Delete
+          {strings.DELETE}
         </IonItemOption>
       </IonItemOptions>
     </IonItemSliding>

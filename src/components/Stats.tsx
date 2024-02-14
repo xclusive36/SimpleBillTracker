@@ -10,6 +10,7 @@ import {
 } from "@ionic/react";
 import { reduceCount } from "../utils/reduceCount";
 import { Bill } from "../interfaces/interfaces";
+import { strings } from "../language/language";
 
 interface Props {
   todaysBills: Bill[];
@@ -30,13 +31,13 @@ export const Stats: React.FC<Props> = ({
         <IonGrid>
           <IonRow>
             <IonCol className="ion-text-center">
-              <IonCardSubtitle>Due</IonCardSubtitle>
+              <IonCardSubtitle>{strings.DUE}</IonCardSubtitle>
             </IonCol>
             <IonCol className="ion-text-center">
-              <IonCardSubtitle>Past Due</IonCardSubtitle>
+              <IonCardSubtitle>{strings.OVERDUE}</IonCardSubtitle>
             </IonCol>
             <IonCol className="ion-text-center">
-              <IonCardSubtitle>Paid</IonCardSubtitle>
+              <IonCardSubtitle>{strings.PAID}</IonCardSubtitle>
             </IonCol>
           </IonRow>
           <IonRow>
@@ -61,20 +62,29 @@ export const Stats: React.FC<Props> = ({
           <IonCol className="ion-text-center">
             <IonCard>
               <IonCardHeader>
-                <IonCardSubtitle>Total Due</IonCardSubtitle>
+                <IonCardSubtitle>{strings.TOTAL_DUE}</IonCardSubtitle>
               </IonCardHeader>
               <IonCardContent>
-                <IonCardTitle>${reduceCount([...todaysBills, ...upcomingBills, ...pastDueBills])}</IonCardTitle>
+                <IonCardTitle>
+                  $
+                  {reduceCount([
+                    ...todaysBills,
+                    ...upcomingBills,
+                    ...pastDueBills,
+                  ])}
+                </IonCardTitle>
               </IonCardContent>
             </IonCard>
           </IonCol>
           <IonCol className="ion-text-center">
             <IonCard>
               <IonCardHeader>
-                <IonCardSubtitle>Total Paid</IonCardSubtitle>
+                <IonCardSubtitle>{strings.TOTAL_PAID}</IonCardSubtitle>
               </IonCardHeader>
               <IonCardContent>
-                <IonCardTitle color="success">${reduceCount(paidBills)}</IonCardTitle>
+                <IonCardTitle color="success">
+                  ${reduceCount(paidBills)}
+                </IonCardTitle>
               </IonCardContent>
             </IonCard>
           </IonCol>
