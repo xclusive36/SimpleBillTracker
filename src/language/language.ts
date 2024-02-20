@@ -26,6 +26,8 @@ export const strings = new LocalizedStrings({
     ALERT_PLACEHOLDER_3: "Minimum amount owed",
     ALERT_CANCEL: "Cancel",
     ALERT_OKAY: "OKAY",
+    ARCHIVE: "Archive",
+    UNARCHIVE: "Unarchive",
     UPDATE: "Update",
     DELETE: "Delete",
 
@@ -283,6 +285,8 @@ export const strings = new LocalizedStrings({
     ALERT_PLACEHOLDER_3: "Cantidad mínima adeudada",
     ALERT_CANCEL: "Cancelar",
     ALERT_OKAY: "OKAY",
+    ARCHIVE: "Archivo",
+    UNARCHIVE: "Desarchivar",
     UPDATE: "Actualizar",
     DELETE: "Borrar",
 
@@ -540,6 +544,8 @@ export const strings = new LocalizedStrings({
     ALERT_PLACEHOLDER_3: "Montant dû minimum",
     ALERT_CANCEL: "Annuler",
     ALERT_OKAY: "D'accord",
+    ARCHIVE: "Archive",
+    UNARCHIVE: "Désarchiver",
     UPDATE: "Mettre à jour",
     DELETE: "Effacer",
 
@@ -797,6 +803,8 @@ export const strings = new LocalizedStrings({
     ALERT_PLACEHOLDER_3: "Mindestbetrag fällig",
     ALERT_CANCEL: "Stornieren",
     ALERT_OKAY: "Okay",
+    ARCHIVE: "Archiv",
+    UNARCHIVE: "Unarchiv",
     UPDATE: "Aktualisieren",
     DELETE: "Löschen",
 

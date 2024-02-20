@@ -1,12 +1,21 @@
-import { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
-  appName: 'Simple Bill Tracker',
-  webDir: 'dist',
+  appId: "com.litestep.simplebilltracker",
+  appName: "Simple Bill Tracker",
+  webDir: "dist",
   server: {
-    androidScheme: 'https'
-  }
+    androidScheme: "https",
+  },
+  plugins: {
+    Badge: {
+      persist: true,
+      autoClear: true,
+    },
+    LocalNotifications: {
+      iconColor: "#488AFF",
+    },
+  },
 };
 
 export default config;

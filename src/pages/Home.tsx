@@ -1,7 +1,6 @@
 import {
   IonButton,
   IonContent,
-  IonFooter,
   IonHeader,
   IonList,
   IonPage,
@@ -21,11 +20,54 @@ import { hapticsImpactLight } from "../capacitor/haptics";
 import { Header } from "../components/Header";
 import { Search } from "../components/Search";
 import { BillList } from "../components/BillList";
+import { clearBadge } from "../capacitor/badge";
+import {
+  checkLocalNotificationPermissions,
+  localNotificationActionPerformed,
+  localNotificationReceived,
+  removeAllDeliveredNotifications,
+  removeAllLocalNotificationListeners,
+  requestLocalNotificationPermissions,
+  scheduleLocalNotification,
+} from "../capacitor/localNotifications";
+import { body } from "ionicons/icons";
+import {
+  keyboardWillHide,
+  keyboardWillShow,
+  removeAllKeyboardListeners,
+} from "../capacitor/keyboard";
 
 const store = new Storage(); // Create a new instance of the Storage class
 store.create(); // Create the storage of the device if it doesn't exist
 
 const Home: React.FC = () => {
+  useEffect(() => {
+    clearBadge(); // Clear the badge count when the component mounts
+
+    // Check if localNotification permissions are granted
+    checkLocalNotificationPermissions().then((status) => {
+      if (status?.display === "granted") {
+        // permissions granted
+        console.log("Permissions previously granted, Adding listeners");
+        localNotificationReceived(); // Add the local notification received listener
+        localNotificationActionPerformed(); // Add the local notification action performed listener
+      } else {
+        // If permissions are not granted, request them
+        requestLocalNotificationPermissions().then((status) => {
+          if (!status) return; // permissions not granted or badge not supported
+          console.log("Permissions now granted, Adding listeners");
+          localNotificationReceived(); // Add the local notification received listener
+          localNotificationActionPerformed(); // Add the local notification action performed listener
+        });
+      }
+    });
+
+    return () => {
+      // Cleanup the background task listeners when the component unmounts
+      removeAllLocalNotificationListeners(); // Remove all the background task listeners
+    };
+  }, []);
+
   const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook
   const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
@@ -37,14 +79,8 @@ const Home: React.FC = () => {
     // This function gets the bills object from the storage of the device and returns it
     const data = await store.get("mybills"); // Get the bills object from the storage of the device
 
-    if (data) {
-      // Long form of if statement to check if data exists. Shorthand conflicts with the data variable type for some reason
-      // If the data exists
-      return data; // Return the data
-    } else {
-      // If the data doesn't exist
-      return []; // Return an empty array
-    }
+    if (data) return data; // Return the data
+    return []; // If the data doesn't exist, return an empty array
   };
 
   const [todaysBills, setTodaysBills] = useState<Bill[]>([]); // Create a new state called todaysBills and set it as an empty array
@@ -62,6 +98,15 @@ const Home: React.FC = () => {
     setPastDueBills(sortedData.pastDueArray); // Set to state the pastDueBills array from the sortedData object
     setPaidBills(sortedData.paidArray); // Set to state the paidBills array from the sortedData object
   };
+
+  useEffect(() => {
+    keyboardWillShow(); // Add keyboard will show listener
+    keyboardWillHide(); // Add keyboard will hide listener
+
+    return () => {
+      removeAllKeyboardListeners(); // Remove all keyboard listeners
+    };
+  }, []);
 
   useEffect(() => {
     getStoredData() // Call the getStoredData function to get the bills object from the storage of the device
@@ -98,6 +143,43 @@ const Home: React.FC = () => {
     const newBills = [...bills, newBill]; // Create a new array with the new bill added to the existing bills array
     await store.set("mybills", newBills); // Set the new bills array to the storage of the device
     setSortedDataToState(newBills); // Set the sorted data to state
+
+    const scheduleNewLocalNotification = async (
+      title: string,
+      body: string,
+      date: string,
+      extra?: any
+    ) => {
+      return scheduleLocalNotification(title, body, date, extra);
+    };
+
+    const billDueDate = new Date(newBill.dueDate);
+    const billDueDatePriorWeek = new Date(newBill.dueDate);
+    billDueDatePriorWeek.setDate(billDueDatePriorWeek.getDate() - 7);
+    const today = new Date();
+    const todayPlusOneWeek = new Date();
+    todayPlusOneWeek.setDate(today.getDate() + 7);
+
+    // if the bill is due later than today, schedule a notification for today
+    if (billDueDate > today) {
+      scheduleNewLocalNotification(
+        "Bill due today",
+        `Your ${newBill.name} bill is due today.`,
+        newBill.dueDate,
+        newBill.id
+      );
+    }
+
+    // if the bill is due later than a week from today, schedule a notification for a week before the due date
+    if (billDueDate > todayPlusOneWeek) {
+      scheduleNewLocalNotification(
+        "Bill due in one week",
+        `Your ${newBill.name} bill is due in one week.`,
+        billDueDatePriorWeek.toISOString().substring(0, 10),
+        newBill.id
+      );
+    }
+
     presentToast("bottom", "Bill added successfully"); // Call the presentToast function
   };
 
@@ -207,6 +289,7 @@ const Home: React.FC = () => {
               <IonTitle size="large">Simple Bill Tracker</IonTitle>
             </IonToolbar>
           </IonHeader>
+          <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
           <Stats
             todaysBills={todaysBills}
             upcomingBills={upcomingBills}
@@ -214,7 +297,6 @@ const Home: React.FC = () => {
             paidBills={paidBills}
           />
           <IonList>
-            <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <BillList
               billArray={todaysBills}
               searchTerm={searchTerm}
@@ -257,68 +339,65 @@ const Home: React.FC = () => {
               dividerTitle="Paid Bills"
               noBillsTitle="No Paid Bills"
               color="success"
+              archive={false}
             />
           </IonList>
+          <IonButton
+            expand="full"
+            onClick={() => {
+              hapticsImpactLight(); // Trigger a light haptic feedback
+              presentAlert({
+                // Call the presentAlert function to present an alert
+                header: "Add a Bill",
+                inputs: [
+                  {
+                    placeholder: "Bill Name",
+                    id: "name",
+                  },
+                  {
+                    placeholder: "Bill Category",
+                    id: "type",
+                  },
+                  {
+                    type: "number",
+                    placeholder: "Minimum amount owed",
+                    min: 1,
+                    id: "amount",
+                  },
+                  {
+                    type: "date",
+                    id: "dueDate",
+                  },
+                ],
+                buttons: [
+                  {
+                    text: "Cancel",
+                    role: "cancel",
+                    handler: () => hapticsImpactLight(), // Trigger a light haptic feedback
+                  },
+                  {
+                    text: "OK",
+                    role: "confirm",
+                    handler: (data) => {
+                      hapticsImpactLight(); // Trigger a light haptic feedback
+                      const bill: Bill = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        name: data[0],
+                        type: data[1],
+                        amount: data[2],
+                        dueDate: data[3],
+                        paid: false,
+                      };
+                      addBill(bill);
+                    },
+                  },
+                ],
+              });
+            }}
+          >
+            Add Bill
+          </IonButton>
         </IonContent>
-        <IonFooter>
-          <IonToolbar>
-            <IonButton
-              expand="full"
-              onClick={() => {
-                hapticsImpactLight(); // Trigger a light haptic feedback
-                presentAlert({
-                  // Call the presentAlert function to present an alert
-                  header: "Add a Bill",
-                  inputs: [
-                    {
-                      placeholder: "Bill Name",
-                      id: "name",
-                    },
-                    {
-                      placeholder: "Bill Category",
-                      id: "type",
-                    },
-                    {
-                      type: "number",
-                      placeholder: "Minimum amount owed",
-                      min: 1,
-                      id: "amount",
-                    },
-                    {
-                      type: "date",
-                      id: "dueDate",
-                    },
-                  ],
-                  buttons: [
-                    {
-                      text: "Cancel",
-                      role: "cancel",
-                      handler: () => hapticsImpactLight(), // Trigger a light haptic feedback
-                    },
-                    {
-                      text: "OK",
-                      role: "confirm",
-                      handler: (data) => {
-                        hapticsImpactLight(); // Trigger a light haptic feedback
-                        const bill: Bill = {
-                          id: Math.random().toString(36).substr(2, 9),
-                          name: data[0],
-                          type: data[1],
-                          amount: data[2],
-                          dueDate: data[3],
-                          paid: false,
-                        };
-                        addBill(bill);
-                      },
-                    },
-                  ],
-                });
-              }}
-            >
-              Add Bill
-            </IonButton>
-          </IonToolbar>
-        </IonFooter>
       </IonPage>
     </>
   );

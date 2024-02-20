@@ -16,6 +16,7 @@ interface Props {
   dividerTitle: string;
   noBillsTitle: string;
   color?: string;
+  archive?: boolean;
 }
 
 export const BillList: React.FC<Props> = ({
@@ -28,6 +29,7 @@ export const BillList: React.FC<Props> = ({
   dividerTitle,
   noBillsTitle,
   color,
+  archive,
 }) => {
   const [operator, setOperator] = useState("-"); // Sort order state [ascending, descending
 
@@ -51,7 +53,10 @@ export const BillList: React.FC<Props> = ({
         title={dividerTitle}
         operator={operator}
         setOperator={setOperator}
-        disabled={billArray.length === 0 || filterItems(searchTerm, billArray).length === 0}
+        disabled={
+          billArray.length === 0 ||
+          filterItems(searchTerm, billArray).length === 0
+        }
       />
       {billArray.length === 0 ? (
         <NoBills title={noBillsTitle} />
@@ -69,6 +74,7 @@ export const BillList: React.FC<Props> = ({
             updateBill={updateBill}
             deleteBill={deleteBill}
             color={color}
+            archive={archive}
           />
         ))
       )}

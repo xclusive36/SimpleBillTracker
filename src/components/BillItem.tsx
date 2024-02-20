@@ -23,6 +23,7 @@ interface Props {
   updateBill: (bill: Bill) => void;
   deleteBill: (bill: Bill) => void;
   color?: string;
+  archive?: boolean;
 }
 
 export const BillItem: React.FC<Props> = ({
@@ -34,6 +35,7 @@ export const BillItem: React.FC<Props> = ({
   updateBill,
   deleteBill,
   color,
+  archive = true,
 }) => {
   const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
 
@@ -108,7 +110,7 @@ export const BillItem: React.FC<Props> = ({
             itemRef.current?.closeOpened();
           }}
         >
-          Archive
+          {archive ? strings.ARCHIVE : strings.UNARCHIVE}
         </IonItemOption>
       </IonItemOptions>
       <IonItem lines={index === billArray.length - 1 ? "none" : "inset"}>

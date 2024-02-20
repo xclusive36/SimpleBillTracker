@@ -73,6 +73,7 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
             presentToast("bottom", "Bills cleared from storage successfully"); // Call the presentToast function
             hapticsImpactLight(); // Trigger a light haptic feedback
             closeMenu(); // Call the closeMenu function
+            window.location.reload(); // Reload the window to update the UI
           },
         },
       ],
