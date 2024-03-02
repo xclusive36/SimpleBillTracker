@@ -230,30 +230,6 @@ const Home: React.FC = () => {
             pastDueBills={pastDueBills}
             paidBills={paidBills}
           />
-          <IonButton
-            size="small"
-            onClick={() => {
-              getPendingLocalNotifications();
-            }}
-          >
-            Get Pending Notifications
-          </IonButton>
-          <IonButton
-            size="small"
-            onClick={() => {
-              cancelAllPendingLocalNotifications();
-            }}
-          >
-            Cancel Pending Notifications
-          </IonButton>
-          <IonButton
-            size="small"
-            onClick={() => {
-              getDeliveredLocalNotifications();
-            }}
-          >
-            Get Received Notifications
-          </IonButton>
           <IonList>
             <BillList
               billArray={pastDueBills}
