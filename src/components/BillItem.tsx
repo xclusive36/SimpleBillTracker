@@ -13,6 +13,7 @@ import { Bill } from "../interfaces/interfaces";
 import { convertDateToString } from "../utils/convertDateToString";
 import { hapticsImpactLight } from "../capacitor/haptics";
 import { strings } from "../language/language";
+import { deleteBill, updateBill } from "../utils/setBill";
 
 interface Props {
   index: number;
@@ -20,8 +21,11 @@ interface Props {
   setArchiveState: (bill: Bill) => void;
   bill: Bill;
   billArray: Bill[];
-  updateBill: (bill: Bill) => void;
-  deleteBill: (bill: Bill) => void;
+  presentToast: (
+    position: "top" | "middle" | "bottom",
+    message: string
+  ) => void;
+  setSortedDataToState: (arg0: Bill[]) => void;
   color?: string;
   archive?: boolean;
 }
@@ -32,8 +36,8 @@ export const BillItem: React.FC<Props> = ({
   setArchiveState,
   bill,
   billArray,
-  updateBill,
-  deleteBill,
+  presentToast,
+  setSortedDataToState,
   color,
   archive = true,
 }) => {
@@ -85,7 +89,9 @@ export const BillItem: React.FC<Props> = ({
               dueDate: data[3],
               paid: bill.paid,
             };
-            updateBill(billObj);
+            updateBill(billObj, presentToast, setSortedDataToState).then(() =>
+              itemRef.current?.closeOpened()
+            );
           },
         },
       ],
@@ -115,9 +121,7 @@ export const BillItem: React.FC<Props> = ({
       </IonItemOptions>
       <IonItem lines={index === billArray.length - 1 ? "none" : "inset"}>
         <IonLabel>
-          <IonCardTitle style={{ fontSize: "1.25rem" }}>
-            {bill.name}
-          </IonCardTitle>
+          <IonCardTitle style={{ fontSize: "1rem" }}>{bill.name}</IonCardTitle>
           <small>{bill.type}</small>
         </IonLabel>
         <IonText slot="end">
@@ -145,7 +149,12 @@ export const BillItem: React.FC<Props> = ({
           color="danger"
           onClick={() => {
             hapticsImpactLight(); // Trigger a light haptic feedback
-            deleteBill(bill);
+            deleteBill(
+              bill,
+              presentAlert,
+              presentToast,
+              setSortedDataToState
+            ).then(() => itemRef.current?.closeOpened());
           }}
         >
           {strings.DELETE}

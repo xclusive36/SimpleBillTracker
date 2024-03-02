@@ -8,7 +8,7 @@ interface Props {
 export const NoBills: React.FC<Props> = ({ title }) => (
   <IonItem lines="none">
     <IonLabel>
-      <IonCardTitle style={{ fontSize: "1.25rem" }}>{title}</IonCardTitle>
+      <IonCardTitle style={{ fontSize: "1rem" }}>{title}</IonCardTitle>
     </IonLabel>
   </IonItem>
 );

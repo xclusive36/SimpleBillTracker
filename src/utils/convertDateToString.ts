@@ -1,5 +1,5 @@
 export const convertDateToString = (date: string) => {
-  // convert the data.dateDue string from yyyy-mm-dd to mm-dd-yyyy
+  // convert the data.dateDue string from yyyy-mm-dd to mm/dd/yyyy
   const dateDueAsArray = date.split("-");
   const dueMonth = dateDueAsArray[1];
   const dueDay = dateDueAsArray[2];

@@ -2,6 +2,46 @@ import { Capacitor } from "@capacitor/core";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import { repeat } from "ionicons/icons";
 import { increaseBadge } from "./badge";
+import BEEP from "../assets/beep.mp3";
+
+export const scheduleLocalNotificationInOneMinute = async () => {
+  if (Capacitor.isNativePlatform()) {
+    await LocalNotifications.registerActionTypes({
+      types: [
+        {
+          id: "1",
+          iosAllowInCarPlay: true,
+          actions: [
+            {
+              id: "open",
+              title: "Open",
+              foreground: true,
+            },
+            {
+              id: "dismiss",
+              title: "Dismiss",
+              foreground: false,
+            },
+          ],
+        },
+      ],
+    });
+
+    await LocalNotifications.schedule({
+      notifications: [
+        {
+          title: "One minute",
+          body: "This notification was scheduled 1 minute ago",
+          id: 1,
+          schedule: { at: new Date(Date.now() + 60 * 1000) },
+          sound: BEEP,
+          extra: { id: "poop" },
+          actionTypeId: "1",
+        },
+      ],
+    });
+  }
+};
 
 export const scheduleLocalNotification = async (
   title: string,
@@ -25,9 +65,9 @@ export const scheduleLocalNotification = async (
           id: Math.floor(Math.random() * 100),
           title: title,
           body: body,
-          sound: "beep.mp3",
+          sound: BEEP,
           schedule: { at: new Date(convertDateToString(date)), repeats: false },
-          extra: extra,
+          extra: { id: extra },
         },
       ],
     });
@@ -38,12 +78,22 @@ export const getPendingLocalNotifications = async () => {
   if (Capacitor.isNativePlatform()) {
     const pending = await LocalNotifications.getPending();
     console.log("Pending notifications", pending);
+    return pending;
   }
 };
 
 export const cancelPendingLocalNotifications = async (id: number) => {
   if (Capacitor.isNativePlatform()) {
-    await LocalNotifications.cancel({ notifications: [{ id: id }] });
+    return await LocalNotifications.cancel({ notifications: [{ id: id }] });
+  }
+};
+
+export const cancelAllPendingLocalNotifications = async () => {
+  if (Capacitor.isNativePlatform()) {
+    const pending = await LocalNotifications.getPending();
+    return await LocalNotifications.cancel({
+      notifications: pending.notifications,
+    });
   }
 };
 
@@ -51,6 +101,7 @@ export const checkIfLocalNotificationsAreEnabled = async () => {
   if (Capacitor.isNativePlatform()) {
     const { value } = await LocalNotifications.areEnabled();
     console.log("Local notifications enabled", value);
+    return value;
   }
 };
 
@@ -58,12 +109,13 @@ export const getDeliveredLocalNotifications = async () => {
   if (Capacitor.isNativePlatform()) {
     const delivered = await LocalNotifications.getDeliveredNotifications();
     console.log("Delivered notifications", delivered);
+    return delivered;
   }
 };
 
 export const removeDeliveredNotifications = async () => {
   if (Capacitor.isNativePlatform()) {
-    await LocalNotifications.removeDeliveredNotifications({
+    return await LocalNotifications.removeDeliveredNotifications({
       notifications: [
         {
           id: 1,
@@ -118,6 +170,6 @@ export const localNotificationActionPerformed = async () => {
 
 export const removeAllLocalNotificationListeners = async () => {
   if (Capacitor.isNativePlatform()) {
-    await LocalNotifications.removeAllListeners();
+    return await LocalNotifications.removeAllListeners();
   }
 };

@@ -10,9 +10,12 @@ interface Props {
   billArray: Bill[];
   searchTerm: string;
   billRef: React.RefObject<HTMLIonItemSlidingElement>;
+  presentToast: (
+    position: "top" | "middle" | "bottom",
+    message: string
+  ) => void;
+  setSortedDataToState: (arg0: Bill[]) => void;
   setBillAsPaid: (bill: Bill) => void;
-  updateBill: (bill: Bill) => void;
-  deleteBill: (bill: Bill) => void;
   dividerTitle: string;
   noBillsTitle: string;
   color?: string;
@@ -23,9 +26,9 @@ export const BillList: React.FC<Props> = ({
   billArray,
   searchTerm,
   billRef,
+  presentToast,
+  setSortedDataToState,
   setBillAsPaid,
-  updateBill,
-  deleteBill,
   dividerTitle,
   noBillsTitle,
   color,
@@ -71,8 +74,8 @@ export const BillList: React.FC<Props> = ({
             setArchiveState={setBillAsPaid}
             bill={bill}
             billArray={billArray}
-            updateBill={updateBill}
-            deleteBill={deleteBill}
+            presentToast={presentToast}
+            setSortedDataToState={setSortedDataToState}
             color={color}
             archive={archive}
           />

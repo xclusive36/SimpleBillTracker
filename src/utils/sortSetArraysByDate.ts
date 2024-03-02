@@ -19,7 +19,6 @@ export const sortSetArraysByDate = (bills: Bill[]) => {
   const todayMonth = today.getMonth() + 1; // getMonth() returns 0-11 so add 1
   const todayDay = today.getDate(); // get day of the month from today
   const todayYear = today.getFullYear(); // get year from today
-
   bills.forEach((bill) => {
     // For each bill in the bills array, convert the bill.dateDue string from yyyy-mm-dd to mm-dd-yyyy
     const dateDueAsArray = bill.dueDate.split("-"); // split the date string into an array
@@ -28,7 +27,7 @@ export const sortSetArraysByDate = (bills: Bill[]) => {
     const dueMonth = dateDueAsArray[1]; // get month from dateDueAsArray
     const dueDay = dateDueAsArray[2]; // get day from dateDueAsArray
     const dueYear = dateDueAsArray[0]; // get year from dateDueAsArray
-    const dueDateString = `${dueMonth}-${dueDay}-${dueYear}`; // convert dateDueAsArray to mm-dd-yyyy string
+    const dueDateString = `${dueMonth}/${dueDay}/${dueYear}`; // convert dateDueAsArray to mm-dd-yyyy string
 
     const dueDate = new Date(dueDateString); // Now create a new date object from the dateDue string
 

@@ -12,7 +12,6 @@ import {
 import "./Home.css";
 import { useEffect, useRef, useState } from "react";
 import { Bill } from "../interfaces/interfaces";
-import { Storage } from "@ionic/storage";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
 import { Sidemenu } from "../components/Sidemenu";
 import { Stats } from "../components/Stats";
@@ -22,25 +21,40 @@ import { Search } from "../components/Search";
 import { BillList } from "../components/BillList";
 import { clearBadge } from "../capacitor/badge";
 import {
+  cancelAllPendingLocalNotifications,
+  cancelPendingLocalNotifications,
   checkLocalNotificationPermissions,
+  getDeliveredLocalNotifications,
+  getPendingLocalNotifications,
   localNotificationActionPerformed,
   localNotificationReceived,
-  removeAllDeliveredNotifications,
   removeAllLocalNotificationListeners,
   requestLocalNotificationPermissions,
   scheduleLocalNotification,
 } from "../capacitor/localNotifications";
-import { body } from "ionicons/icons";
 import {
   keyboardWillHide,
   keyboardWillShow,
   removeAllKeyboardListeners,
 } from "../capacitor/keyboard";
-
-const store = new Storage(); // Create a new instance of the Storage class
-store.create(); // Create the storage of the device if it doesn't exist
+import { getStoredData, store } from "../utils/storedData";
+import { addBill } from "../utils/setBill";
 
 const Home: React.FC = () => {
+  const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
+  const [present] = useIonToast(); // Create a new toast using the useIonToast hook
+
+  const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
+  const upcomingBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the upcomingBills item
+  const pastDueBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the pastDueBills item
+  const paidBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the paidBills item
+
+  const [todaysBills, setTodaysBills] = useState<Bill[]>([]); // Create a new state called todaysBills and set it as an empty array
+  const [upcomingBills, setUpcomingBills] = useState<Bill[]>([]); // Create a new state called upcomingBills and set it to an empty array
+  const [pastDueBills, setPastDueBills] = useState<Bill[]>([]); // Create a new state called pastDueBills and set it to an empty array
+  const [paidBills, setPaidBills] = useState<Bill[]>([]); // Create a new state called paidBills and set it to an empty array
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Create a new state called categorySearchTerm and set it to an empty string
+
   useEffect(() => {
     clearBadge(); // Clear the badge count when the component mounts
 
@@ -68,27 +82,14 @@ const Home: React.FC = () => {
     };
   }, []);
 
-  const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
-  const [present] = useIonToast(); // Create a new toast using the useIonToast hook
-  const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
-  const upcomingBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the upcomingBills item
-  const pastDueBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the pastDueBills item
-  const paidBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the paidBills item
+  useEffect(() => {
+    keyboardWillShow(); // Add keyboard will show listener
+    keyboardWillHide(); // Add keyboard will hide listener
 
-  const getStoredData = async () => {
-    // This function gets the bills object from the storage of the device and returns it
-    const data = await store.get("mybills"); // Get the bills object from the storage of the device
-
-    if (data) return data; // Return the data
-    return []; // If the data doesn't exist, return an empty array
-  };
-
-  const [todaysBills, setTodaysBills] = useState<Bill[]>([]); // Create a new state called todaysBills and set it as an empty array
-  const [upcomingBills, setUpcomingBills] = useState<Bill[]>([]); // Create a new state called upcomingBills and set it to an empty array
-  const [pastDueBills, setPastDueBills] = useState<Bill[]>([]); // Create a new state called pastDueBills and set it to an empty array
-  const [paidBills, setPaidBills] = useState<Bill[]>([]); // Create a new state called paidBills and set it to an empty array
-
-  const [searchTerm, setSearchTerm] = useState<string>(""); // Create a new state called categorySearchTerm and set it to an empty string
+    return () => {
+      removeAllKeyboardListeners(); // Remove all keyboard listeners
+    };
+  }, []);
 
   const setSortedDataToState = async (data: Bill[]) => {
     const sortedData = sortSetArraysByDate(data); // Call the sortSetArraysByDate function and assign the returned object to a variable
@@ -100,21 +101,19 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    keyboardWillShow(); // Add keyboard will show listener
-    keyboardWillHide(); // Add keyboard will hide listener
-
-    return () => {
-      removeAllKeyboardListeners(); // Remove all keyboard listeners
-    };
-  }, []);
-
-  useEffect(() => {
-    getStoredData() // Call the getStoredData function to get the bills object from the storage of the device
-      .then((data) => {
-        // If the data exists (i.e. the bills array of objects exists in the storage of the device)
+    const interval = setInterval(() => {
+      // Create a new interval
+      getStoredData().then((data) => {
+        // Get the bills object from the storage of the device
         setSortedDataToState(data); // Set the sorted data to state
       });
-  }, []); // Run the effect only once when the component mounts
+    }, 60000); // Set the interval to 60000ms (1 minute)
+
+    getStoredData().then((data) => {
+      // Get the bills object from the storage of the device
+      setSortedDataToState(data); // Set the sorted data to state
+    });
+  }, []);
 
   const presentToast = (
     // This function presents a toast with a message and a position
@@ -130,149 +129,84 @@ const Home: React.FC = () => {
     });
   };
 
-  const addBill = async (newBill: Bill) => {
-    // This function adds a new bill to the bills object in the storage of the device and sets the sorted data to state
-
-    // Check if the newBill object has all the required properties
-    if (!newBill.name || !newBill.type || !newBill.amount || !newBill.dueDate) {
-      presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
-      return; // Return nothing
-    }
-
-    const bills = await getStoredData(); // Get the bills object from the storage of the device
-    const newBills = [...bills, newBill]; // Create a new array with the new bill added to the existing bills array
-    await store.set("mybills", newBills); // Set the new bills array to the storage of the device
-    setSortedDataToState(newBills); // Set the sorted data to state
-
-    const scheduleNewLocalNotification = async (
-      title: string,
-      body: string,
-      date: string,
-      extra?: any
-    ) => {
-      return scheduleLocalNotification(title, body, date, extra);
-    };
-
-    const billDueDate = new Date(newBill.dueDate);
-    const billDueDatePriorWeek = new Date(newBill.dueDate);
-    billDueDatePriorWeek.setDate(billDueDatePriorWeek.getDate() - 7);
-    const today = new Date();
-    const todayPlusOneWeek = new Date();
-    todayPlusOneWeek.setDate(today.getDate() + 7);
-
-    // if the bill is due later than today, schedule a notification for today
-    if (billDueDate > today) {
-      scheduleNewLocalNotification(
-        "Bill due today",
-        `Your ${newBill.name} bill is due today.`,
-        newBill.dueDate,
-        newBill.id
-      );
-    }
-
-    // if the bill is due later than a week from today, schedule a notification for a week before the due date
-    if (billDueDate > todayPlusOneWeek) {
-      scheduleNewLocalNotification(
-        "Bill due in one week",
-        `Your ${newBill.name} bill is due in one week.`,
-        billDueDatePriorWeek.toISOString().substring(0, 10),
-        newBill.id
-      );
-    }
-
-    presentToast("bottom", "Bill added successfully"); // Call the presentToast function
-  };
-
-  const updateBill = async (updatedBill: Bill) => {
-    // This function updates a bill in the bills object in the storage of the device and sets the sorted data to state
-
-    // Check if the updatedBill object has all the required properties
-    if (
-      !updatedBill.name ||
-      !updatedBill.type ||
-      !updatedBill.amount ||
-      !updatedBill.dueDate
-    ) {
-      presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
-      return; // Return nothing
-    }
-
-    const bills = await getStoredData(); // Get the bills object from the storage of the device
-    // locate the bill in the bills by id array and update it
-    const updatedBills = bills.map((bill: Bill) => {
-      // Create a new array with the updated bill
-      if (bill.id === updatedBill.id) {
-        // If the bill id matches the updated bill id
-        return updatedBill; // Return the updated bill
-      } else {
-        // If the bill id doesn't match the updated bill id
-        return bill; // Return the bill as is
-      }
-    });
-    await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
-    setSortedDataToState(updatedBills); // Set the sorted data to state
-    presentToast("bottom", "Bill updated successfully"); // Call the presentToast function
-    // close any open sliding items
-    todaysBillsRef.current?.closeOpened();
-    upcomingBillsRef.current?.closeOpened();
-    pastDueBillsRef.current?.closeOpened();
-    paidBillsRef.current?.closeOpened();
-  };
-
-  const deleteBill = async (deletedBill: Bill) => {
-    // This function deletes a bill from the bills object in the storage of the device and sets the sorted data to state
-    presentAlert({
-      // Call the presentAlert function
-      header: "Delete Bill?", // Set the header of the alert to "Delete Bill?"
-      message: "This action cannot be undone.", // Set the message of the alert to "This action cannot be undone."
-      buttons: [
-        // Set the buttons of the alert
-        {
-          text: "Cancel",
-          role: "cancel",
-          handler: () => {
-            // Create a new handler for the cancel button
-            hapticsImpactLight(); // Trigger a light haptic feedback
-            return; // Return nothing
-          },
-        },
-        {
-          text: "Delete",
-          handler: async () => {
-            // Create a new handler for the delete button
-            const bills = await getStoredData(); // Get the bills object from the storage of the device
-            const updatedBills = bills.filter(
-              // Create a new array with the deleted bill removed from the existing bills array
-              (bill: Bill) => bill.id !== deletedBill.id
-            ); // Create a new array with the deleted bill removed from the existing bills array
-            await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
-            setSortedDataToState(updatedBills); // Set the sorted data to state
-            presentToast("bottom", "Bill deleted successfully"); // Call the presentToast function
-            // close any open sliding items
-            todaysBillsRef.current?.closeOpened();
-            upcomingBillsRef.current?.closeOpened();
-            pastDueBillsRef.current?.closeOpened();
-            paidBillsRef.current?.closeOpened();
-            hapticsImpactLight(); // Trigger a light haptic feedback
-          },
-        },
-      ],
-    });
+  const scheduleNewLocalNotification = async (
+    title: string,
+    body: string,
+    date: string,
+    extra?: any
+  ) => {
+    return scheduleLocalNotification(title, body, date, extra);
   };
 
   const setBillAsPaid = async (bill: Bill) => {
     // This function sets a bill as paid in the bills object in the storage of the device and sets the sorted data to state
     const bills = await getStoredData(); // Get the bills object from the storage of the device
-    const updatedBills = bills.map((b: Bill) => {
-      // Create a new array with the updated bill
-      if (b.id === bill.id) {
-        // If the bill id matches the updated bill id
-        return { ...b, paid: !b.paid }; // Return the updated bill with the paid property set to the opposite of the current paid property
-      } else {
-        // If the bill id doesn't match the updated bill id
-        return b; // Return the bill as is
+    // get index of bill in bills array
+    const index = bills.findIndex((b: Bill) => b.id === bill.id); // Find the index of the bill in the bills array of objects
+    const updatedBills = [...bills]; // Create a new array with the existing bills array
+    updatedBills[index].paid = !updatedBills[index].paid; // Set the paid property of the bill to the opposite of the current paid property
+
+    if (!updatedBills[index].paid) {
+      // If the bill is set as paid
+
+      const billDueDatePriorWeek = new Date(bill.dueDate);
+      billDueDatePriorWeek.setDate(billDueDatePriorWeek.getDate() - 7);
+      const today = new Date();
+      const todayPlusOneWeek = new Date();
+      todayPlusOneWeek.setDate(today.getDate() + 7);
+
+      const billPastDue = new Date(bill.dueDate);
+      billPastDue.setDate(billPastDue.getDate() + 1);
+
+      const dateDueAsArray = bill.dueDate.split("-");
+      const dueMonth = dateDueAsArray[1];
+      const dueDay = dateDueAsArray[2];
+      const dueYear = dateDueAsArray[0];
+      const dueDateString = `${dueMonth}/${dueDay}/${dueYear}`;
+
+      const billDueDate = new Date(dueDateString);
+
+      // if the bill is due today or later, schedule a notification for today
+      if (billDueDate.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0)) {
+        scheduleNewLocalNotification(
+          "Bill due today",
+          `Your ${bill.name} bill is due today.`,
+          bill.dueDate,
+          bill.id
+        );
       }
-    });
+
+      // if the bill is due later than a week from today, schedule a notification for a week before the due date
+      if (
+        billDueDate.setHours(0, 0, 0, 0) >=
+        todayPlusOneWeek.setHours(0, 0, 0, 0)
+      ) {
+        scheduleNewLocalNotification(
+          "Bill due in one week",
+          `Your ${bill.name} bill is due in one week.`,
+          billDueDatePriorWeek.toISOString().substring(0, 10),
+          bill.id
+        );
+      }
+
+      // schedule a notification the day the bill is past due
+      if (billDueDate.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))
+        scheduleNewLocalNotification(
+          "Bill past due",
+          `Your ${bill.name} bill is past due.`,
+          billPastDue.toISOString().substring(0, 10),
+          bill.id
+        );
+    } else {
+      // If the bill is set as unpaid
+      const notifications = await getPendingLocalNotifications();
+      const id = notifications?.notifications.find(
+        (notification) => notification.extra.id === bill.id
+      )?.id;
+
+      id && (await cancelPendingLocalNotifications(id));
+    }
+
     await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
     setSortedDataToState(updatedBills); // Set the sorted data to state
     presentToast("bottom", "Bill updated successfully"); // Call the presentToast function
@@ -296,14 +230,49 @@ const Home: React.FC = () => {
             pastDueBills={pastDueBills}
             paidBills={paidBills}
           />
+          <IonButton
+            size="small"
+            onClick={() => {
+              getPendingLocalNotifications();
+            }}
+          >
+            Get Pending Notifications
+          </IonButton>
+          <IonButton
+            size="small"
+            onClick={() => {
+              cancelAllPendingLocalNotifications();
+            }}
+          >
+            Cancel Pending Notifications
+          </IonButton>
+          <IonButton
+            size="small"
+            onClick={() => {
+              getDeliveredLocalNotifications();
+            }}
+          >
+            Get Received Notifications
+          </IonButton>
           <IonList>
+            <BillList
+              billArray={pastDueBills}
+              searchTerm={searchTerm}
+              billRef={pastDueBillsRef}
+              presentToast={presentToast}
+              setSortedDataToState={setSortedDataToState}
+              setBillAsPaid={setBillAsPaid}
+              dividerTitle="Past Due Bills"
+              noBillsTitle="No Past Due Bills"
+              color="danger"
+            />
             <BillList
               billArray={todaysBills}
               searchTerm={searchTerm}
               billRef={todaysBillsRef}
+              presentToast={presentToast}
+              setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
-              updateBill={updateBill}
-              deleteBill={deleteBill}
               dividerTitle="Due Today"
               noBillsTitle="No Bills Due Today"
               color="warning"
@@ -312,30 +281,19 @@ const Home: React.FC = () => {
               billArray={upcomingBills}
               searchTerm={searchTerm}
               billRef={upcomingBillsRef}
+              presentToast={presentToast}
+              setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
-              updateBill={updateBill}
-              deleteBill={deleteBill}
               dividerTitle="Upcoming Bills"
               noBillsTitle="No Upcoming Bills"
-            />
-            <BillList
-              billArray={pastDueBills}
-              searchTerm={searchTerm}
-              billRef={pastDueBillsRef}
-              setBillAsPaid={setBillAsPaid}
-              updateBill={updateBill}
-              deleteBill={deleteBill}
-              dividerTitle="Past Due Bills"
-              noBillsTitle="No Past Due Bills"
-              color="danger"
             />
             <BillList
               billArray={paidBills}
               searchTerm={searchTerm}
               billRef={paidBillsRef}
+              presentToast={presentToast}
+              setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
-              updateBill={updateBill}
-              deleteBill={deleteBill}
               dividerTitle="Paid Bills"
               noBillsTitle="No Paid Bills"
               color="success"
@@ -388,7 +346,7 @@ const Home: React.FC = () => {
                         dueDate: data[3],
                         paid: false,
                       };
-                      addBill(bill);
+                      addBill(bill, presentToast, setSortedDataToState);
                     },
                   },
                 ],
