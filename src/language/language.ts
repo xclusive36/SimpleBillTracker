@@ -4,7 +4,7 @@ export const strings = new LocalizedStrings({
   en: {
     // English
     // components/Header.tsx
-    TITLE: "Simple Bill Tracker",
+    TITLE: "My Bills",
 
     // components/Stats.tsx
     DUE: "Due",
@@ -263,7 +263,7 @@ export const strings = new LocalizedStrings({
   es: {
     // Spanish
     // components/Header.tsx
-    TITLE: "Rastreador de facturas simple",
+    TITLE: "Mis cuentas",
 
     // components/Stats.tsx
     DUE: "Vencido",
@@ -522,7 +522,7 @@ export const strings = new LocalizedStrings({
   fr: {
     // French
     // components/Header.tsx
-    TITLE: "Suivi des factures simple",
+    TITLE: "Mes factures",
 
     // components/Stats.tsx
     DUE: "Pendiente",
@@ -781,7 +781,7 @@ export const strings = new LocalizedStrings({
   de: {
     // German
     // components/Header.tsx
-    TITLE: "Einfache Rechnungsverfolgung",
+    TITLE: "Meine Rechnungen",
 
     // components/Stats.tsx
     DUE: "Fällig",

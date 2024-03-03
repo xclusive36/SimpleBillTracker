@@ -26,52 +26,76 @@ export const Stats: React.FC<Props> = ({
   paidBills,
 }) => {
   return (
-    <IonGrid style={{ borderTop: "1px solid #f0f0f0" }}>
-      <IonRow>
-        <IonCol className="ion-text-center">
-          <IonCardSubtitle>{strings.DUE}</IonCardSubtitle>
+    <IonGrid>
+      <IonRow style={{ borderTop: "1px solid #f0f0f0", padding: ".5rem" }}>
+        <IonCol>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}>
+            <IonCardSubtitle>{strings.DUE}</IonCardSubtitle>
+            <IonCardTitle color="primary">
+              {todaysBills.length + upcomingBills.length}
+            </IonCardTitle>
+          </div>
         </IonCol>
-        <IonCol className="ion-text-center">
-          <IonCardSubtitle>{strings.OVERDUE}</IonCardSubtitle>
+        <IonCol>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}>
+            <IonCardSubtitle>{strings.OVERDUE}</IonCardSubtitle>
+            <IonCardTitle color="danger">{pastDueBills.length}</IonCardTitle>
+          </div>
         </IonCol>
-        <IonCol className="ion-text-center">
-          <IonCardSubtitle>{strings.PAID}</IonCardSubtitle>
+        <IonCol>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}>
+            <IonCardSubtitle>{strings.PAID}</IonCardSubtitle>
+            <IonCardTitle color="success">{paidBills.length}</IonCardTitle>
+          </div>
         </IonCol>
       </IonRow>
-      <IonRow
-        style={{
-          borderBottom: "1px solid #f0f0f0",
-          paddingBottom: "5px",
-        }}
-      >
-        <IonCol className="ion-text-center">
-          <IonCardTitle color="primary">
-            {todaysBills.length + upcomingBills.length}
-          </IonCardTitle>
+      <IonRow style={{ borderTop: "1px solid #f0f0f0", padding: ".5rem" }}>
+        <IonCol>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}>
+            <IonCardSubtitle>{strings.TOTAL_DUE}</IonCardSubtitle>
+            <IonCardTitle>
+              $
+              {reduceCount([...todaysBills, ...upcomingBills, ...pastDueBills])}
+            </IonCardTitle>
+          </div>
         </IonCol>
-        <IonCol className="ion-text-center">
-          <IonCardTitle color="danger">{pastDueBills.length}</IonCardTitle>
-        </IonCol>
-        <IonCol className="ion-text-center">
-          <IonCardTitle color="success">{paidBills.length}</IonCardTitle>
-        </IonCol>
-      </IonRow>
-      <IonRow style={{ paddingTop: "5px" }}>
-        <IonCol className="ion-text-center">
-          <IonCardSubtitle>{strings.TOTAL_DUE}</IonCardSubtitle>
-        </IonCol>
-        <IonCol className="ion-text-center">
-          <IonCardSubtitle>{strings.TOTAL_PAID}</IonCardSubtitle>
-        </IonCol>
-      </IonRow>
-      <IonRow>
-        <IonCol className="ion-text-center">
-          <IonCardTitle>
-            ${reduceCount([...todaysBills, ...upcomingBills, ...pastDueBills])}
-          </IonCardTitle>
-        </IonCol>
-        <IonCol className="ion-text-center">
-          <IonCardTitle color="success">${reduceCount(paidBills)}</IonCardTitle>
+        <IonCol>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+            }}>
+            <IonCardSubtitle>{strings.TOTAL_PAID}</IonCardSubtitle>
+            <IonCardTitle color="success">
+              ${reduceCount(paidBills)}
+            </IonCardTitle>
+          </div>
         </IonCol>
       </IonRow>
     </IonGrid>

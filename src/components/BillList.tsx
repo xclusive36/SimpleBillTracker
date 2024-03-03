@@ -4,7 +4,6 @@ import { filterItems } from "../utils/filterArray";
 import { BillItem } from "./BillItem";
 import { Divider } from "./Divider";
 import { NoBills } from "./NoBills";
-import { strings } from "../language/language";
 
 interface Props {
   billArray: Bill[];
@@ -17,7 +16,6 @@ interface Props {
   setSortedDataToState: (arg0: Bill[]) => void;
   setBillAsPaid: (bill: Bill) => void;
   dividerTitle: string;
-  noBillsTitle: string;
   color?: string;
   archive?: boolean;
 }
@@ -30,7 +28,6 @@ export const BillList: React.FC<Props> = ({
   setSortedDataToState,
   setBillAsPaid,
   dividerTitle,
-  noBillsTitle,
   color,
   archive,
 }) => {
@@ -62,9 +59,9 @@ export const BillList: React.FC<Props> = ({
         }
       />
       {billArray.length === 0 ? (
-        <NoBills title={noBillsTitle} />
+        <NoBills />
       ) : filterItems(searchTerm, billArray).length === 0 ? (
-        <NoBills title={strings.BILL_NO_SEARCH} />
+        <NoBills />
       ) : (
         sortByDate(filterItems(searchTerm, billArray)).map((bill, index) => (
           <BillItem

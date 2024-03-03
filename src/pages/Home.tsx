@@ -1,12 +1,10 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
   IonList,
   IonPage,
   IonTitle,
   IonToolbar,
-  useIonAlert,
   useIonToast,
 } from "@ionic/react";
 import "./Home.css";
@@ -15,16 +13,13 @@ import { Bill } from "../interfaces/interfaces";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
 import { Sidemenu } from "../components/Sidemenu";
 import { Stats } from "../components/Stats";
-import { hapticsImpactLight } from "../capacitor/haptics";
 import { Header } from "../components/Header";
 import { Search } from "../components/Search";
 import { BillList } from "../components/BillList";
 import { clearBadge } from "../capacitor/badge";
 import {
-  cancelAllPendingLocalNotifications,
   cancelPendingLocalNotifications,
   checkLocalNotificationPermissions,
-  getDeliveredLocalNotifications,
   getPendingLocalNotifications,
   localNotificationActionPerformed,
   localNotificationReceived,
@@ -38,10 +33,9 @@ import {
   removeAllKeyboardListeners,
 } from "../capacitor/keyboard";
 import { getStoredData, store } from "../utils/storedData";
-import { addBill } from "../utils/setBill";
+import { strings } from "../language/language";
 
 const Home: React.FC = () => {
-  const [presentAlert] = useIonAlert(); // Create a new alert using the useIonAlert hook
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook
 
   const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
@@ -216,11 +210,14 @@ const Home: React.FC = () => {
     <>
       <Sidemenu store={store} />
       <IonPage id="main-content">
-        <Header />
+        <Header
+          presentToast={presentToast}
+          setSortedDataToState={setSortedDataToState}
+        />
         <IonContent fullscreen>
           <IonHeader collapse="condense">
             <IonToolbar>
-              <IonTitle size="large">Simple Bill Tracker</IonTitle>
+              <IonTitle size="large">{strings.TITLE}</IonTitle>
             </IonToolbar>
           </IonHeader>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
@@ -231,28 +228,30 @@ const Home: React.FC = () => {
             paidBills={paidBills}
           />
           <IonList>
-            <BillList
-              billArray={pastDueBills}
-              searchTerm={searchTerm}
-              billRef={pastDueBillsRef}
-              presentToast={presentToast}
-              setSortedDataToState={setSortedDataToState}
-              setBillAsPaid={setBillAsPaid}
-              dividerTitle="Past Due Bills"
-              noBillsTitle="No Past Due Bills"
-              color="danger"
-            />
-            <BillList
-              billArray={todaysBills}
-              searchTerm={searchTerm}
-              billRef={todaysBillsRef}
-              presentToast={presentToast}
-              setSortedDataToState={setSortedDataToState}
-              setBillAsPaid={setBillAsPaid}
-              dividerTitle="Due Today"
-              noBillsTitle="No Bills Due Today"
-              color="warning"
-            />
+            {pastDueBills && pastDueBills.length > 0 && (
+              <BillList
+                billArray={pastDueBills}
+                searchTerm={searchTerm}
+                billRef={pastDueBillsRef}
+                presentToast={presentToast}
+                setSortedDataToState={setSortedDataToState}
+                setBillAsPaid={setBillAsPaid}
+                dividerTitle="Past Due Bills"
+                color="danger"
+              />
+            )}
+            {todaysBills && todaysBills.length > 0 && (
+              <BillList
+                billArray={todaysBills}
+                searchTerm={searchTerm}
+                billRef={todaysBillsRef}
+                presentToast={presentToast}
+                setSortedDataToState={setSortedDataToState}
+                setBillAsPaid={setBillAsPaid}
+                dividerTitle="Due Today"
+                color="warning"
+              />
+            )}
             <BillList
               billArray={upcomingBills}
               searchTerm={searchTerm}
@@ -261,7 +260,6 @@ const Home: React.FC = () => {
               setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
               dividerTitle="Upcoming Bills"
-              noBillsTitle="No Upcoming Bills"
             />
             <BillList
               billArray={paidBills}
@@ -271,66 +269,10 @@ const Home: React.FC = () => {
               setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
               dividerTitle="Paid Bills"
-              noBillsTitle="No Paid Bills"
               color="success"
               archive={false}
             />
           </IonList>
-          <IonButton
-            expand="full"
-            onClick={() => {
-              hapticsImpactLight(); // Trigger a light haptic feedback
-              presentAlert({
-                // Call the presentAlert function to present an alert
-                header: "Add a Bill",
-                inputs: [
-                  {
-                    placeholder: "Bill Name",
-                    id: "name",
-                  },
-                  {
-                    placeholder: "Bill Category",
-                    id: "type",
-                  },
-                  {
-                    type: "number",
-                    placeholder: "Minimum amount owed",
-                    min: 1,
-                    id: "amount",
-                  },
-                  {
-                    type: "date",
-                    id: "dueDate",
-                  },
-                ],
-                buttons: [
-                  {
-                    text: "Cancel",
-                    role: "cancel",
-                    handler: () => hapticsImpactLight(), // Trigger a light haptic feedback
-                  },
-                  {
-                    text: "OK",
-                    role: "confirm",
-                    handler: (data) => {
-                      hapticsImpactLight(); // Trigger a light haptic feedback
-                      const bill: Bill = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        name: data[0],
-                        type: data[1],
-                        amount: data[2],
-                        dueDate: data[3],
-                        paid: false,
-                      };
-                      addBill(bill, presentToast, setSortedDataToState);
-                    },
-                  },
-                ],
-              });
-            }}
-          >
-            Add Bill
-          </IonButton>
         </IonContent>
       </IonPage>
     </>

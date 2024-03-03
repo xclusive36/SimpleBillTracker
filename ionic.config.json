@@ -1,5 +1,5 @@
 {
-  "name": "Simple Bill Tracker",
+  "name": "Bill Tracker",
   "integrations": {
     "capacitor": {}
   },
