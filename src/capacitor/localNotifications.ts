@@ -3,8 +3,15 @@ import { LocalNotifications } from "@capacitor/local-notifications";
 import { repeat } from "ionicons/icons";
 import { increaseBadge } from "./badge";
 import BEEP from "../assets/beep.mp3";
+import SMALL_ICON from "../assets/icon-76.png";
+import LARGE_ICON from "../assets/Icon-60@3x.png";
 
-export const scheduleLocalNotificationInOneMinute = async () => {
+export const scheduleLocalNotification = async (
+  title: string,
+  body: string,
+  date: string,
+  extra?: any
+) => {
   if (Capacitor.isNativePlatform()) {
     await LocalNotifications.registerActionTypes({
       types: [
@@ -27,29 +34,6 @@ export const scheduleLocalNotificationInOneMinute = async () => {
       ],
     });
 
-    await LocalNotifications.schedule({
-      notifications: [
-        {
-          title: "One minute",
-          body: "This notification was scheduled 1 minute ago",
-          id: 1,
-          schedule: { at: new Date(Date.now() + 60 * 1000) },
-          sound: BEEP,
-          extra: { id: "poop" },
-          actionTypeId: "1",
-        },
-      ],
-    });
-  }
-};
-
-export const scheduleLocalNotification = async (
-  title: string,
-  body: string,
-  date: string,
-  extra?: any
-) => {
-  if (Capacitor.isNativePlatform()) {
     const convertDateToString = (date: string) => {
       const dateDueAsArray = date.split("-");
       const dueMonth = dateDueAsArray[1];
@@ -68,6 +52,8 @@ export const scheduleLocalNotification = async (
           sound: BEEP,
           schedule: { at: new Date(convertDateToString(date)), repeats: false },
           extra: { id: extra },
+          smallIcon: SMALL_ICON,
+          largeIcon: LARGE_ICON,
         },
       ],
     });

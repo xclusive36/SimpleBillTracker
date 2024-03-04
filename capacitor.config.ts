@@ -1,8 +1,8 @@
 import { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "com.litestep.simplebilltracker",
-  appName: "Simple Bill Tracker",
+  appId: "com.litestep.pocketbills",
+  appName: "PocketBills",
   webDir: "dist",
   server: {
     androidScheme: "https",

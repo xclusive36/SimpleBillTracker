@@ -4,7 +4,8 @@ export const strings = new LocalizedStrings({
   en: {
     // English
     // components/Header.tsx
-    TITLE: "My Bills",
+    TITLE: "PocketBills",
+    ADD_BILL: "Add Bill",
 
     // components/Stats.tsx
     DUE: "Due",
@@ -38,6 +39,16 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Clear Data",
     REMOVE_ALL_DATA: "Remove All Data",
     RESET_SUBHEADER: "Are you sure?",
+
+    // components/AddModal.tsx
+    REQUIRED_NAME: "Name is required",
+    REQUIRED_CATEGORY: "Category is required",
+    REQUIRED_AMOUNT: "Amount owed must be greater than 0",
+    REQUIRED_DATE: "Date is required",
+    PLACEHOLDER_NAME: "Bill Name",
+    PLACEHOLDER_CATEGORY: "Bill Category",
+    PLACEHOLDER_AMOUNT: "Amount Owed",
+    INPUT_REQUIRED: "required",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `This Privacy Policy is meant to help you understand what
@@ -263,7 +274,8 @@ export const strings = new LocalizedStrings({
   es: {
     // Spanish
     // components/Header.tsx
-    TITLE: "Mis cuentas",
+    TITLE: "Billetes de bolsillo",
+    ADD_BILL: "Agregar factura",
 
     // components/Stats.tsx
     DUE: "Vencido",
@@ -297,6 +309,16 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Borrar datos",
     REMOVE_ALL_DATA: "Eliminar todos los datos",
     RESET_SUBHEADER: "¿Estás seguro?",
+
+    // components/AddModal.tsx
+    REQUIRED_NAME: "Se requiere el nombre",
+    REQUIRED_CATEGORY: "la categoria es requerida",
+    REQUIRED_AMOUNT: "El monto adeudado debe ser mayor que 0",
+    REQUIRED_DATE: "Se requiere fecha",
+    PLACEHOLDER_NAME: "Nombre de la factura",
+    PLACEHOLDER_CATEGORY: "Categoría de factura",
+    PLACEHOLDER_AMOUNT: "Cantidad adeudada",
+    INPUT_REQUIRED: "requerido",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Esta Política de privacidad está destinada a ayudarlo a comprender qué
@@ -522,7 +544,8 @@ export const strings = new LocalizedStrings({
   fr: {
     // French
     // components/Header.tsx
-    TITLE: "Mes factures",
+    TITLE: "Billets de poche",
+    ADD_BILL: "Ajouter une facture",
 
     // components/Stats.tsx
     DUE: "Pendiente",
@@ -556,6 +579,16 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Effacer les données",
     REMOVE_ALL_DATA: "Supprimer toutes les données",
     RESET_SUBHEADER: "Êtes-vous sûr?",
+
+    // components/AddModal.tsx
+    REQUIRED_NAME: "Le nom est requis",
+    REQUIRED_CATEGORY: "La catégorie est obligatoire",
+    REQUIRED_AMOUNT: "Le montant dû doit être supérieur à 0",
+    REQUIRED_DATE: "La date est requise",
+    PLACEHOLDER_NAME: "Nom de la facture",
+    PLACEHOLDER_CATEGORY: "Catégorie de facture",
+    PLACEHOLDER_AMOUNT: "Montant dû",
+    INPUT_REQUIRED: "requis",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Cette politique de confidentialité est destinée à vous aider à comprendre ce que
@@ -781,7 +814,8 @@ export const strings = new LocalizedStrings({
   de: {
     // German
     // components/Header.tsx
-    TITLE: "Meine Rechnungen",
+    TITLE: "PocketBills",
+    ADD_BILL: "Rechnung hinzufügen",
 
     // components/Stats.tsx
     DUE: "Fällig",
@@ -815,6 +849,16 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Daten löschen",
     REMOVE_ALL_DATA: "Alle Daten entfernen",
     RESET_SUBHEADER: "Bist du sicher?",
+
+    // components/AddModal.tsx
+    REQUIRED_NAME: "Name ist erforderlich",
+    REQUIRED_CATEGORY: "Kategorie ist erforderlich",
+    REQUIRED_AMOUNT: "Der geschuldete Betrag muss größer als 0 sein",
+    REQUIRED_DATE: "Datum ist erforderlich",
+    PLACEHOLDER_NAME: "Rechnungsname",
+    PLACEHOLDER_CATEGORY: "Rechnungskategorie",
+    PLACEHOLDER_AMOUNT: "Geschuldeter Betrag",
+    INPUT_REQUIRED: "erforderlich",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Diese Datenschutzrichtlinie soll Ihnen helfen zu verstehen, was

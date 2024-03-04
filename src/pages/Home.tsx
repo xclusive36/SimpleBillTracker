@@ -27,13 +27,9 @@ import {
   requestLocalNotificationPermissions,
   scheduleLocalNotification,
 } from "../capacitor/localNotifications";
-import {
-  keyboardWillHide,
-  keyboardWillShow,
-  removeAllKeyboardListeners,
-} from "../capacitor/keyboard";
 import { getStoredData, store } from "../utils/storedData";
 import { strings } from "../language/language";
+import { AddModal } from "../components/addModal";
 
 const Home: React.FC = () => {
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook
@@ -73,15 +69,6 @@ const Home: React.FC = () => {
     return () => {
       // Cleanup the background task listeners when the component unmounts
       removeAllLocalNotificationListeners(); // Remove all the background task listeners
-    };
-  }, []);
-
-  useEffect(() => {
-    keyboardWillShow(); // Add keyboard will show listener
-    keyboardWillHide(); // Add keyboard will hide listener
-
-    return () => {
-      removeAllKeyboardListeners(); // Remove all keyboard listeners
     };
   }, []);
 
@@ -210,10 +197,7 @@ const Home: React.FC = () => {
     <>
       <Sidemenu store={store} />
       <IonPage id="main-content">
-        <Header
-          presentToast={presentToast}
-          setSortedDataToState={setSortedDataToState}
-        />
+        <Header />
         <IonContent fullscreen>
           <IonHeader collapse="condense">
             <IonToolbar>
@@ -226,6 +210,10 @@ const Home: React.FC = () => {
             upcomingBills={upcomingBills}
             pastDueBills={pastDueBills}
             paidBills={paidBills}
+          />
+          <AddModal
+            presentToast={presentToast}
+            setSortedDataToState={setSortedDataToState}
           />
           <IonList>
             {pastDueBills && pastDueBills.length > 0 && (

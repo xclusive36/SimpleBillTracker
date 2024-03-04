@@ -1,5 +1,6 @@
 import {
   IonCardTitle,
+  IonIcon,
   IonItem,
   IonItemOption,
   IonItemOptions,
@@ -14,6 +15,13 @@ import { convertDateToString } from "../utils/convertDateToString";
 import { hapticsImpactLight } from "../capacitor/haptics";
 import { strings } from "../language/language";
 import { deleteBill, updateBill } from "../utils/setBill";
+import { UpdateModal } from "./UpdateModal";
+import {
+  checkmarkOutline,
+  closeOutline,
+  createOutline,
+  refreshOutline,
+} from "ionicons/icons";
 
 interface Props {
   index: number;
@@ -99,67 +107,77 @@ export const BillItem: React.FC<Props> = ({
   };
 
   return (
-    <IonItemSliding ref={itemRef}>
-      <IonItemOptions
-        side="start"
-        onIonSwipe={() => {
-          hapticsImpactLight(); // Trigger a light haptic feedback
-          setArchiveState(bill);
-          itemRef.current?.closeOpened();
-        }}
-      >
-        <IonItemOption
-          color="success"
-          onClick={() => {
+    <>
+      <IonItemSliding ref={itemRef}>
+        <IonItemOptions
+          side="start"
+          onIonSwipe={() => {
             hapticsImpactLight(); // Trigger a light haptic feedback
             setArchiveState(bill);
             itemRef.current?.closeOpened();
-          }}
-        >
-          {archive ? strings.ARCHIVE : strings.UNARCHIVE}
-        </IonItemOption>
-      </IonItemOptions>
-      <IonItem lines={index === billArray.length - 1 ? "none" : "inset"}>
-        <IonLabel>
-          <IonCardTitle style={{ fontSize: "1rem" }}>{bill.name}</IonCardTitle>
-          <small>{bill.type}</small>
-        </IonLabel>
-        <IonText slot="end">
-          <IonCardTitle
-            className="ion-text-right"
-            style={{ fontSize: "1rem" }}
-            color={color || "primary"}
-          >
-            ${Number(bill.amount)}
-          </IonCardTitle>
-          <small>{convertDateToString(bill.dueDate)}</small>
-        </IonText>
-      </IonItem>
-      <IonItemOptions side="end">
-        <IonItemOption
-          color="secondary"
-          onClick={() => {
-            hapticsImpactLight(); // Trigger a light haptic feedback
-            presentAlertUpdate(bill);
-          }}
-        >
-          {strings.UPDATE}
-        </IonItemOption>
-        <IonItemOption
-          color="danger"
-          onClick={() => {
-            hapticsImpactLight(); // Trigger a light haptic feedback
-            deleteBill(
-              bill,
-              presentAlert,
-              presentToast,
-              setSortedDataToState
-            ).then(() => itemRef.current?.closeOpened());
-          }}
-        >
-          {strings.DELETE}
-        </IonItemOption>
-      </IonItemOptions>
-    </IonItemSliding>
+          }}>
+          <IonItemOption
+            color="success"
+            onClick={() => {
+              hapticsImpactLight(); // Trigger a light haptic feedback
+              setArchiveState(bill);
+              itemRef.current?.closeOpened();
+            }}>
+            {archive ? (
+              <IonIcon slot="icon-only" icon={checkmarkOutline} />
+            ) : (
+              <IonIcon slot="icon-only" icon={refreshOutline} />
+            )}
+          </IonItemOption>
+        </IonItemOptions>
+        <IonItem lines={index === billArray.length - 1 ? "none" : "inset"}>
+          <IonLabel>
+            <IonCardTitle style={{ fontSize: "1rem" }}>
+              {bill.name}
+            </IonCardTitle>
+            <small>{bill.type}</small>
+          </IonLabel>
+          <IonText slot="end">
+            <IonCardTitle
+              className="ion-text-right"
+              style={{ fontSize: "1rem" }}
+              color={color || "primary"}>
+              ${Number(bill.amount)}
+            </IonCardTitle>
+            <small>{convertDateToString(bill.dueDate)}</small>
+          </IonText>
+        </IonItem>
+        <IonItemOptions side="end">
+          <IonItemOption
+            color="secondary"
+            id={`update-modal-${index}`}
+            onClick={() => {
+              hapticsImpactLight(); // Trigger a light haptic feedback
+            }}>
+            <IonIcon slot="icon-only" icon={createOutline} />
+          </IonItemOption>
+          <IonItemOption
+            color="danger"
+            onClick={() => {
+              hapticsImpactLight(); // Trigger a light haptic feedback
+              deleteBill(
+                bill,
+                presentAlert,
+                presentToast,
+                setSortedDataToState
+              ).then(() => itemRef.current?.closeOpened());
+            }}>
+            <IonIcon slot="icon-only" icon={closeOutline} />
+          </IonItemOption>
+        </IonItemOptions>
+      </IonItemSliding>
+      <UpdateModal
+        index={index}
+        itemRef={itemRef}
+        bill={bill}
+        presentToast={presentToast}
+        setSortedDataToState={setSortedDataToState}
+      />
+    </>
   );
 };

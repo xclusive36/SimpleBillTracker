@@ -26,11 +26,11 @@ export const addBill = async (
 ) => {
   // This function adds a new bill to the bills object in the storage of the device and sets the sorted data to state
 
-  // Check if the newBill object has all the required properties
-  if (!newBill.name || !newBill.type || !newBill.amount || !newBill.dueDate) {
-    presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
-    return; // Return nothing
-  }
+  // // Check if the newBill object has all the required properties
+  // if (!newBill.name || !newBill.type || !newBill.amount || !newBill.dueDate) {
+  //   presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
+  //   return; // Return nothing
+  // }
 
   const bills = await getStoredData(); // Get the bills object from the storage of the device
   const newBills = [...bills, newBill]; // Create a new array with the new bill added to the existing bills array

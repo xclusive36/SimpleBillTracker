@@ -1,4 +1,5 @@
 import {
+  IonButton,
   IonButtons,
   IonHeader,
   IonMenuButton,
@@ -6,21 +7,9 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { strings } from "../language/language";
-import { AddBill } from "./AddBill";
-import { Bill } from "../interfaces/interfaces";
+import { hapticsImpactLight } from "../capacitor/haptics";
 
-interface Props {
-  presentToast: (
-    position: "top" | "middle" | "bottom",
-    message: string
-  ) => void;
-  setSortedDataToState: (arg0: Bill[]) => void;
-}
-
-export const Header: React.FC<Props> = ({
-  presentToast,
-  setSortedDataToState,
-}) => {
+export const Header: React.FC = () => {
   return (
     <IonHeader>
       <IonToolbar>
@@ -29,10 +18,15 @@ export const Header: React.FC<Props> = ({
         </IonButtons>
         <IonTitle>{strings.TITLE}</IonTitle>
         <IonButtons slot="end">
-          <AddBill
-            presentToast={presentToast}
-            setSortedDataToState={setSortedDataToState}
-          />
+          <IonButton
+            strong={true}
+            onClick={() => {
+              hapticsImpactLight(); // Trigger a light haptic feedback
+            }}
+            id="open-modal"
+            expand="block">
+            {strings.ADD_BILL}&nbsp;
+          </IonButton>
         </IonButtons>
       </IonToolbar>
     </IonHeader>
