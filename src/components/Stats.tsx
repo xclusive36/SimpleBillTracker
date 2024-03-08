@@ -27,7 +27,7 @@ export const Stats: React.FC<Props> = ({
 }) => {
   return (
     <IonGrid>
-      <IonRow style={{ borderTop: "1px solid #f0f0f0", padding: ".5rem" }}>
+      <IonRow style={{ borderTop: "1px solid var(--ion-color-light)", padding: ".5rem" }}>
         <IonCol>
           <div
             style={{
@@ -67,7 +67,7 @@ export const Stats: React.FC<Props> = ({
           </div>
         </IonCol>
       </IonRow>
-      <IonRow style={{ borderTop: "1px solid #f0f0f0", padding: ".5rem" }}>
+      <IonRow style={{ borderTop: "1px solid var(--ion-color-light)", padding: ".5rem" }}>
         <IonCol>
           <div
             style={{

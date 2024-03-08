@@ -29,7 +29,7 @@ import {
 } from "../capacitor/localNotifications";
 import { getStoredData, store } from "../utils/storedData";
 import { strings } from "../language/language";
-import { AddModal } from "../components/addModal";
+import { AddModal } from "../components/AddModal";
 
 const Home: React.FC = () => {
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook

@@ -20,14 +20,7 @@ export const Divider: React.FC<Props> = ({
   };
 
   return (
-    <IonItemDivider
-      color="light"
-      sticky
-      style={{
-        borderTop: "1px solid #ddd",
-        borderBottom: "1px solid #ddd",
-      }}
-    >
+    <IonItemDivider color="light" sticky>
       <IonLabel>
         <small>{title}</small>
       </IonLabel>
@@ -36,8 +29,7 @@ export const Divider: React.FC<Props> = ({
         fill="clear"
         slot="end"
         color="dark"
-        onClick={toggleSortOrder}
-      >
+        onClick={toggleSortOrder}>
         <IonIcon icon={swapVerticalOutline} />
       </IonButton>
     </IonItemDivider>

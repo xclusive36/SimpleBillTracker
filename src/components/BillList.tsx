@@ -54,7 +54,7 @@ export const BillList: React.FC<Props> = ({
         operator={operator}
         setOperator={setOperator}
         disabled={
-          billArray.length === 0 ||
+          billArray.length <= 1 ||
           filterItems(searchTerm, billArray).length === 0
         }
       />

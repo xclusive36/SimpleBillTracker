@@ -98,16 +98,16 @@ export const updateBill = async (
 ) => {
   // This function updates a bill in the bills object in the storage of the device and sets the sorted data to state
 
-  // Check if the updatedBill object has all the required properties
-  if (
-    !updatedBill.name ||
-    !updatedBill.type ||
-    !updatedBill.amount ||
-    !updatedBill.dueDate
-  ) {
-    presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
-    return; // Return nothing
-  }
+  // // Check if the updatedBill object has all the required properties
+  // if (
+  //   !updatedBill.name ||
+  //   !updatedBill.type ||
+  //   !updatedBill.amount ||
+  //   !updatedBill.dueDate
+  // ) {
+  //   presentToast("bottom", "Please fill in all fields"); // Call the presentToast function
+  //   return; // Return nothing
+  // }
 
   const bills = await getStoredData(); // Get the bills object from the storage of the device
   // locate the bill in the bills by id array and update it
