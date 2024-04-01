@@ -180,12 +180,23 @@ const Home: React.FC = () => {
         );
     } else {
       // If the bill is set as unpaid
+      // const notifications = await getPendingLocalNotifications();
+      // const id = notifications?.notifications.find(
+      //   (notification) => notification.extra.id === bill.id
+      // )?.id;
+
+      // id && (await cancelPendingLocalNotifications(id));
       const notifications = await getPendingLocalNotifications();
       const id = notifications?.notifications.find(
         (notification) => notification.extra.id === bill.id
       )?.id;
 
-      id && (await cancelPendingLocalNotifications(id));
+      // for each pendingNotification in notifications.notifications, if the id matches the deletedBill.id, cancel the notification
+      notifications?.notifications.forEach(async (notification) => {
+        if (notification.extra.id === bill.id) {
+          await cancelPendingLocalNotifications(notification.id);
+        }
+      });
     }
 
     await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
