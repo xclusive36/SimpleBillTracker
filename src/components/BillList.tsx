@@ -4,6 +4,8 @@ import { filterItems } from "../utils/filterArray";
 import { BillItem } from "./BillItem";
 import { Divider } from "./Divider";
 import { NoBills } from "./NoBills";
+import { IonButton } from "@ionic/react";
+import { strings } from "../language/language";
 
 interface Props {
   billArray: Bill[];
@@ -32,6 +34,8 @@ export const BillList: React.FC<Props> = ({
   archive,
 }) => {
   const [operator, setOperator] = useState("-"); // Sort order state [ascending, descending
+
+  const [billsExpanded, setBillsExpanded] = useState<boolean>(false); // Create a new state called billsExpanded and set it to false
 
   const sortByDate = (array: Bill[]) => {
     // This function sorts an array of bills by the dueDate property. Newest bills first
@@ -62,7 +66,7 @@ export const BillList: React.FC<Props> = ({
         <NoBills />
       ) : filterItems(searchTerm, billArray).length === 0 ? (
         <NoBills />
-      ) : (
+      ) : billsExpanded ? (
         sortByDate(filterItems(searchTerm, billArray)).map((bill, index) => (
           <BillItem
             key={index}
@@ -77,6 +81,37 @@ export const BillList: React.FC<Props> = ({
             archive={archive}
           />
         ))
+      ) : (
+        sortByDate(filterItems(searchTerm, billArray))
+          .slice(0, 10)
+          .map((bill, index) => (
+            <BillItem
+              key={index}
+              index={index}
+              itemRef={billRef}
+              setArchiveState={setBillAsPaid}
+              bill={bill}
+              billArray={billArray}
+              presentToast={presentToast}
+              setSortedDataToState={setSortedDataToState}
+              color={color}
+              archive={archive}
+            />
+          ))
+      )}
+      {billArray && billArray.length > 10 && (
+        <div className="ion-text-center">
+          <IonButton
+            fill="clear"
+            size="small"
+            onClick={() => {
+              setBillsExpanded(!billsExpanded);
+            }}>
+            {billsExpanded
+              ? strings.BILL_COLLAPSE
+              : `${strings.BILL_COLLAPSE} ${billArray.length} ${strings.BILL_BILLS}`}
+          </IonButton>
+        </div>
       )}
     </>
   );

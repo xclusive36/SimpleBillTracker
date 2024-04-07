@@ -1,6 +1,9 @@
 import {
+  IonButton,
   IonContent,
   IonHeader,
+  IonItem,
+  IonLabel,
   IonList,
   IonPage,
   IonTitle,
@@ -39,6 +42,7 @@ const Home: React.FC = () => {
   const pastDueBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the pastDueBills item
   const paidBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the paidBills item
 
+  // Create and set the initial state of the component
   const [todaysBills, setTodaysBills] = useState<Bill[]>([]); // Create a new state called todaysBills and set it as an empty array
   const [upcomingBills, setUpcomingBills] = useState<Bill[]>([]); // Create a new state called upcomingBills and set it to an empty array
   const [pastDueBills, setPastDueBills] = useState<Bill[]>([]); // Create a new state called pastDueBills and set it to an empty array
@@ -150,8 +154,8 @@ const Home: React.FC = () => {
       // if the bill is due today or later, schedule a notification for today
       if (billDueDate.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0)) {
         scheduleNewLocalNotification(
-          "Bill due today",
-          `Your ${bill.name} bill is due today.`,
+          strings.DUE_TODAY,
+          `${strings.DUE_YOUR} ${bill.name} ${strings.DUE_BILL_TODAY}.`,
           bill.dueDate,
           bill.id
         );
@@ -163,8 +167,8 @@ const Home: React.FC = () => {
         todayPlusOneWeek.setHours(0, 0, 0, 0)
       ) {
         scheduleNewLocalNotification(
-          "Bill due in one week",
-          `Your ${bill.name} bill is due in one week.`,
+          strings.DUE_WEEK,
+          `${strings.DUE_YOUR} ${bill.name} ${strings.DUE_BILL_WEEK}.`,
           billDueDatePriorWeek.toISOString().substring(0, 10),
           bill.id
         );
@@ -173,18 +177,12 @@ const Home: React.FC = () => {
       // schedule a notification the day the bill is past due
       if (billDueDate.setHours(0, 0, 0, 0) >= today.setHours(0, 0, 0, 0))
         scheduleNewLocalNotification(
-          "Bill past due",
-          `Your ${bill.name} bill is past due.`,
+          strings.DUE_PASTDUE,
+          `${strings.DUE_YOUR} ${bill.name} ${strings.DUE_BILL_PASTDUE}.`,
           billPastDue.toISOString().substring(0, 10),
           bill.id
         );
     } else {
-      // If the bill is set as unpaid
-      // const notifications = await getPendingLocalNotifications();
-      // const id = notifications?.notifications.find(
-      //   (notification) => notification.extra.id === bill.id
-      // )?.id;
-
       // id && (await cancelPendingLocalNotifications(id));
       const notifications = await getPendingLocalNotifications();
       const id = notifications?.notifications.find(
@@ -201,7 +199,7 @@ const Home: React.FC = () => {
 
     await store.set("mybills", updatedBills); // Set the updated bills array to the storage of the device
     setSortedDataToState(updatedBills); // Set the sorted data to state
-    presentToast("bottom", "Bill updated successfully"); // Call the presentToast function
+    presentToast("bottom", strings.BILL_UPDATED); // Call the presentToast function
   };
 
   return (
@@ -235,7 +233,7 @@ const Home: React.FC = () => {
                 presentToast={presentToast}
                 setSortedDataToState={setSortedDataToState}
                 setBillAsPaid={setBillAsPaid}
-                dividerTitle="Past Due Bills"
+                dividerTitle={strings.BILL_PAST_DIVIDER}
                 color="danger"
               />
             )}
@@ -247,7 +245,7 @@ const Home: React.FC = () => {
                 presentToast={presentToast}
                 setSortedDataToState={setSortedDataToState}
                 setBillAsPaid={setBillAsPaid}
-                dividerTitle="Due Today"
+                dividerTitle={strings.BILL_TODAY_DIVIDER}
                 color="warning"
               />
             )}
@@ -258,7 +256,7 @@ const Home: React.FC = () => {
               presentToast={presentToast}
               setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
-              dividerTitle="Upcoming Bills"
+              dividerTitle={strings.BILL_UPCOMING_DIVIDER}
             />
             <BillList
               billArray={paidBills}
@@ -267,7 +265,7 @@ const Home: React.FC = () => {
               presentToast={presentToast}
               setSortedDataToState={setSortedDataToState}
               setBillAsPaid={setBillAsPaid}
-              dividerTitle="Paid Bills"
+              dividerTitle={strings.BILL_PAID_DIVIDER}
               color="success"
               archive={false}
             />

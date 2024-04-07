@@ -112,10 +112,12 @@ export const AddModal: React.FC<Props> = ({
           className="ion-margin-top"
           mode="md"
           fill="outline"></IonInput>
-        <IonDatetime
-          className="ion-margin-top"
-          ref={billDate}
-          presentation="date"></IonDatetime>
+        <div>
+          <IonDatetime
+            className="ion-margin"
+            ref={billDate}
+            presentation="date"></IonDatetime>
+        </div>
       </IonContent>
     </IonModal>
   );

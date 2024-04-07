@@ -19,6 +19,9 @@ export const strings = new LocalizedStrings({
 
     // components/BillList.tsx
     BILL_NO_SEARCH: "No Search Results",
+    BILL_COLLAPSE: "Collapse",
+    BILL_EXPAND: "Expand all",
+    BILL_BILLS: "bills",
 
     // components/BillItem.tsx
     ALERT_HEADER: "Update Bill",
@@ -49,6 +52,20 @@ export const strings = new LocalizedStrings({
     PLACEHOLDER_CATEGORY: "Bill Category",
     PLACEHOLDER_AMOUNT: "Amount Owed",
     INPUT_REQUIRED: "required",
+
+    // pages/Home.tsx
+    DUE_TODAY: "Bill due today",
+    DUE_WEEK: "Bill due in one week",
+    DUE_PASTDUE: "Bill is past due",
+    DUE_YOUR: "Your",
+    DUE_BILL_TODAY: "bill is due today",
+    DUE_BILL_WEEK: "bill is due in one week",
+    DUE_BILL_PASTDUE: "bill is past due",
+    BILL_UPDATED: "Bill updated successfully",
+    BILL_PAST_DIVIDER: "Past Due Bills",
+    BILL_TODAY_DIVIDER: "Bills Due Today",
+    BILL_UPCOMING_DIVIDER: "Upcoming Bills",
+    BILL_PAID_DIVIDER: "Paid Bills",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `This Privacy Policy is meant to help you understand what
@@ -289,6 +306,9 @@ export const strings = new LocalizedStrings({
 
     // components/BillList.tsx
     BILL_NO_SEARCH: "Sin resultados de búsqueda",
+    BILL_COLLAPSE: "Colapsar",
+    BILL_EXPAND: "Expandir todo",
+    BILL_BILLS: "facturas",
 
     // components/BillItem.tsx
     ALERT_HEADER: "Actualizar factura",
@@ -319,6 +339,20 @@ export const strings = new LocalizedStrings({
     PLACEHOLDER_CATEGORY: "Categoría de factura",
     PLACEHOLDER_AMOUNT: "Cantidad adeudada",
     INPUT_REQUIRED: "requerido",
+
+    // pages/Home.tsx
+    DUE_TODAY: "Factura vencida hoy",
+    DUE_WEEK: "Factura vencida en una semana",
+    DUE_PASTDUE: "La factura está vencida",
+    DUE_YOUR: "Su",
+    DUE_BILL_TODAY: "la factura vence hoy",
+    DUE_BILL_WEEK: "la factura vence en una semana",
+    DUE_BILL_PASTDUE: "la factura está vencida",
+    BILL_UPDATED: "Factura actualizada exitosamente",
+    BILL_PAST_DIVIDER: "Facturas vencidas",
+    BILL_TODAY_DIVIDER: "Facturas vencidas hoy",
+    BILL_UPCOMING_DIVIDER: "Próximas facturas",
+    BILL_PAID_DIVIDER: "Facturas pagadas",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Esta Política de privacidad está destinada a ayudarlo a comprender qué
@@ -559,6 +593,9 @@ export const strings = new LocalizedStrings({
 
     // components/BillList.tsx
     BILL_NO_SEARCH: "Aucun résultat de recherche",
+    BILL_COLLAPSE: "Effondrement",
+    BILL_EXPAND: "Développer tout",
+    BILL_BILLS: "factures",
 
     // components/BillItem.tsx
     ALERT_HEADER: "Mettre à jour la facture",
@@ -589,6 +626,20 @@ export const strings = new LocalizedStrings({
     PLACEHOLDER_CATEGORY: "Catégorie de facture",
     PLACEHOLDER_AMOUNT: "Montant dû",
     INPUT_REQUIRED: "requis",
+
+    // pages/Home.tsx
+    DUE_TODAY: "Facture à payer aujourd'hui",
+    DUE_WEEK: "Facture due dans une semaine",
+    DUE_PASTDUE: "La facture est en souffrance",
+    DUE_YOUR: "Ton",
+    DUE_BILL_TODAY: "la facture est due aujourd'hui",
+    DUE_BILL_WEEK: "la facture est due dans une semaine",
+    DUE_BILL_PASTDUE: "la facture est en souffrance",
+    BILL_UPDATED: "Facture mise à jour avec succès",
+    BILL_PAST_DIVIDER: "Factures en souffrance",
+    BILL_TODAY_DIVIDER: "Factures dues aujourd'hui",
+    BILL_UPCOMING_DIVIDER: "Factures à venir",
+    BILL_PAID_DIVIDER: "Factures payées",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Cette politique de confidentialité est destinée à vous aider à comprendre ce que
@@ -829,6 +880,9 @@ export const strings = new LocalizedStrings({
 
     // components/BillList.tsx
     BILL_NO_SEARCH: "Keine Suchergebnisse",
+    BILL_COLLAPSE: "Zusammenbruch",
+    BILL_EXPAND: "Alle erweitern",
+    BILL_BILLS: "Rechnungen",
 
     // components/BillItem.tsx
     ALERT_HEADER: "Rechnung aktualisieren",
@@ -859,6 +913,20 @@ export const strings = new LocalizedStrings({
     PLACEHOLDER_CATEGORY: "Rechnungskategorie",
     PLACEHOLDER_AMOUNT: "Geschuldeter Betrag",
     INPUT_REQUIRED: "erforderlich",
+
+    // pages/Home.tsx
+    DUE_TODAY: "Rechnung heute fällig",
+    DUE_WEEK: "Rechnung fällig in einer Woche",
+    DUE_PASTDUE: "Die Rechnung ist überfällig",
+    DUE_YOUR: "Dein",
+    DUE_BILL_TODAY: "Rechnung ist heute fällig",
+    DUE_BILL_WEEK: "die Rechnung ist in einer Woche fällig",
+    DUE_BILL_PASTDUE: "Rechnung ist überfällig",
+    BILL_UPDATED: "Bill wurde erfolgreich aktualisiert",
+    BILL_PAST_DIVIDER: "Überfällige Rechnungen",
+    BILL_TODAY_DIVIDER: "Heute fällige Rechnungen",
+    BILL_UPCOMING_DIVIDER: "Kommende Rechnungen",
+    BILL_PAID_DIVIDER: "Bezahlte Rechnungen",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Diese Datenschutzrichtlinie soll Ihnen helfen zu verstehen, was
