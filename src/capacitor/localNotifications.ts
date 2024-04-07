@@ -1,6 +1,5 @@
 import { Capacitor } from "@capacitor/core";
 import { LocalNotifications } from "@capacitor/local-notifications";
-import { repeat } from "ionicons/icons";
 import { increaseBadge } from "./badge";
 import BEEP from "../assets/beep.mp3";
 import SMALL_ICON from "../assets/icon-76.png";

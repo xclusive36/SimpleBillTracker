@@ -1,9 +1,6 @@
 import {
-  IonButton,
   IonContent,
   IonHeader,
-  IonItem,
-  IonLabel,
   IonList,
   IonPage,
   IonTitle,
@@ -33,8 +30,16 @@ import {
 import { getStoredData, store } from "../utils/storedData";
 import { strings } from "../language/language";
 import { AddModal } from "../components/AddModal";
+import { setAccessoryBarVisible } from "../capacitor/keyboard";
 
 const Home: React.FC = () => {
+  useEffect(() => {
+    setAccessoryBarVisible(true);
+    return () => {
+      setAccessoryBarVisible(false);
+    };
+  }, []);
+
   const [present] = useIonToast(); // Create a new toast using the useIonToast hook
 
   const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
