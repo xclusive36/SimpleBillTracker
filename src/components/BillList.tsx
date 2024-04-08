@@ -36,6 +36,7 @@ export const BillList: React.FC<Props> = ({
   const [operator, setOperator] = useState("-"); // Sort order state [ascending, descending
 
   const [billsExpanded, setBillsExpanded] = useState<boolean>(false); // Create a new state called billsExpanded and set it to false
+  const [hideList, setHideList] = useState<boolean>(false); // Create a new state called hideList and set it to false
 
   const sortByDate = (array: Bill[]) => {
     // This function sorts an array of bills by the dueDate property. Newest bills first
@@ -51,22 +52,28 @@ export const BillList: React.FC<Props> = ({
     });
   };
 
+  const toggleHidden = () => {
+    // This function toggles the hideList state
+    setHideList(!hideList); // Set the hideList state to the opposite of its current value
+  }
+
   return (
     <>
       <Divider
         title={dividerTitle}
         operator={operator}
         setOperator={setOperator}
+        toggle={toggleHidden}
         disabled={
           billArray.length <= 1 ||
           filterItems(searchTerm, billArray).length === 0
         }
       />
-      {billArray.length === 0 ? (
+      {billArray.length === 0 && !hideList ? (
         <NoBills />
-      ) : filterItems(searchTerm, billArray).length === 0 ? (
+      ) : filterItems(searchTerm, billArray).length === 0 && !hideList ? (
         <NoBills />
-      ) : billsExpanded ? (
+      ) : billsExpanded && !hideList ? (
         sortByDate(filterItems(searchTerm, billArray)).map((bill, index) => (
           <BillItem
             key={index}
@@ -82,6 +89,7 @@ export const BillList: React.FC<Props> = ({
           />
         ))
       ) : (
+        !hideList &&
         sortByDate(filterItems(searchTerm, billArray))
           .slice(0, 10)
           .map((bill, index) => (

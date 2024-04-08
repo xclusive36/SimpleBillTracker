@@ -7,6 +7,7 @@ interface Props {
   operator: string;
   setOperator: (operator: string) => void;
   disabled: boolean;
+  toggle?: () => void;
 }
 
 export const Divider: React.FC<Props> = ({
@@ -14,13 +15,14 @@ export const Divider: React.FC<Props> = ({
   operator,
   setOperator,
   disabled,
+  toggle,
 }) => {
   const toggleSortOrder = () => {
     setOperator(operator === "+" ? "-" : "+");
   };
 
   return (
-    <IonItemDivider color="light" sticky>
+    <IonItemDivider color="light" sticky onClick={toggle}>
       <IonLabel>
         <small>{title}</small>
       </IonLabel>
