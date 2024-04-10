@@ -1,11 +1,11 @@
 import {
   IonButton,
   IonButtons,
+  IonCheckbox,
   IonContent,
   IonDatetime,
   IonHeader,
   IonInput,
-  IonItem,
   IonModal,
   IonText,
   IonTitle,
@@ -109,10 +109,17 @@ export const AddModal: React.FC<Props> = ({
           inputmode="decimal"
           placeholder="0"
           min="0"
-          className="ion-margin-top"
+          className="ion-margin-top ion-margin-end"
           mode="md"
           fill="outline"></IonInput>
-        <div>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            backgroundColor: "var(--ion-color-light, #f4f5f8)",
+          }}>
           <IonDatetime
             className="ion-margin"
             ref={billDate}

@@ -34,6 +34,7 @@ export const strings = new LocalizedStrings({
     UNARCHIVE: "Unarchive",
     UPDATE: "Update",
     DELETE: "Delete",
+    TAX_DEDUCTIBLE: "Tax Deductible",
 
     // components/Sidemenu.tsx
     HOME: "Home",
@@ -66,6 +67,7 @@ export const strings = new LocalizedStrings({
     BILL_TODAY_DIVIDER: "Bills Due Today",
     BILL_UPCOMING_DIVIDER: "Upcoming Bills",
     BILL_PAID_DIVIDER: "Paid Bills",
+    BILL_TAX_DIVIDER: "Tax Deductible Bills",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `This Privacy Policy is meant to help you understand what
@@ -321,6 +323,7 @@ export const strings = new LocalizedStrings({
     UNARCHIVE: "Desarchivar",
     UPDATE: "Actualizar",
     DELETE: "Borrar",
+    TAX_DEDUCTIBLE: "Deducible de impuestos",
 
     // components/Sidemenu.tsx
     HOME: "Casa",
@@ -353,6 +356,7 @@ export const strings = new LocalizedStrings({
     BILL_TODAY_DIVIDER: "Facturas vencidas hoy",
     BILL_UPCOMING_DIVIDER: "Próximas facturas",
     BILL_PAID_DIVIDER: "Facturas pagadas",
+    BILL_TAX_DIVIDER: "Facturas deducibles de impuestos",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Esta Política de privacidad está destinada a ayudarlo a comprender qué
@@ -608,6 +612,7 @@ export const strings = new LocalizedStrings({
     UNARCHIVE: "Désarchiver",
     UPDATE: "Mettre à jour",
     DELETE: "Effacer",
+    TAX_DEDUCTIBLE: "Déductible d'impôts",
 
     // components/Sidemenu.tsx
     HOME: "Accueil",
@@ -640,6 +645,7 @@ export const strings = new LocalizedStrings({
     BILL_TODAY_DIVIDER: "Factures dues aujourd'hui",
     BILL_UPCOMING_DIVIDER: "Factures à venir",
     BILL_PAID_DIVIDER: "Factures payées",
+    BILL_TAX_DIVIDER: "Factures déductibles d'impôt",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Cette politique de confidentialité est destinée à vous aider à comprendre ce que
@@ -895,6 +901,7 @@ export const strings = new LocalizedStrings({
     UNARCHIVE: "Unarchiv",
     UPDATE: "Aktualisieren",
     DELETE: "Löschen",
+    TAX_DEDUCTIBLE: "Steuerlich absetzbar",
 
     // components/Sidemenu.tsx
     HOME: "Zuhause",
@@ -927,6 +934,7 @@ export const strings = new LocalizedStrings({
     BILL_TODAY_DIVIDER: "Heute fällige Rechnungen",
     BILL_UPCOMING_DIVIDER: "Kommende Rechnungen",
     BILL_PAID_DIVIDER: "Bezahlte Rechnungen",
+    BILL_TAX_DIVIDER: "Steuerlich absetzbare Rechnungen",
 
     // pages/Privacy.tsx
     PRIVACY_POLICY_TEXT_1: `Diese Datenschutzrichtlinie soll Ihnen helfen zu verstehen, was

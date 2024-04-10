@@ -5,7 +5,6 @@ import {
   IonDatetime,
   IonHeader,
   IonInput,
-  IonItem,
   IonModal,
   IonText,
   IonTitle,
@@ -17,7 +16,6 @@ import { updateBill } from "../utils/setBill";
 import { strings } from "../language/language";
 
 interface Props {
-  index: number;
   itemRef: React.RefObject<HTMLIonItemSlidingElement>;
   bill: Bill;
   presentToast: (
@@ -28,7 +26,6 @@ interface Props {
 }
 
 export const UpdateModal: React.FC<Props> = ({
-  index,
   itemRef,
   bill,
   presentToast,
@@ -59,7 +56,7 @@ export const UpdateModal: React.FC<Props> = ({
       type: (billCategory.current?.value as string).trim() || "",
       amount: (billOwed.current?.value as number) || 0,
       dueDate: formattedDate,
-      paid: false,
+      paid: bill.paid,
     };
 
     updateBill(billObj, presentToast, setSortedDataToState);
@@ -68,7 +65,7 @@ export const UpdateModal: React.FC<Props> = ({
   }
 
   return (
-    <IonModal ref={modal} trigger={`update-modal-${index}`}>
+    <IonModal ref={modal} trigger={`update-modal-${bill.id}`}>
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
@@ -118,14 +115,22 @@ export const UpdateModal: React.FC<Props> = ({
           placeholder="0"
           min="0"
           value={bill.amount}
-          className="ion-margin-top"
+          className="ion-margin-top ion-margin-end"
           mode="md"
           fill="outline"></IonInput>
-        <IonDatetime
-          className="ion-margin-top"
-          ref={billDate}
-          presentation="date"
-          value={bill.dueDate}></IonDatetime>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            width: "100%",
+            backgroundColor: "var(--ion-color-light, #f4f5f8)",
+          }}>
+          <IonDatetime
+            className="ion-margin"
+            ref={billDate}
+            presentation="date"></IonDatetime>
+        </div>
       </IonContent>
     </IonModal>
   );

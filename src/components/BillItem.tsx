@@ -1,4 +1,5 @@
 import {
+  IonCardSubtitle,
   IonCardTitle,
   IonIcon,
   IonItem,
@@ -150,7 +151,7 @@ export const BillItem: React.FC<Props> = ({
         <IonItemOptions side="end">
           <IonItemOption
             color="secondary"
-            id={`update-modal-${index}`}
+            id={`update-modal-${bill.id}`}
             onClick={() => {
               hapticsImpactLight(); // Trigger a light haptic feedback
             }}>
@@ -172,7 +173,6 @@ export const BillItem: React.FC<Props> = ({
         </IonItemOptions>
       </IonItemSliding>
       <UpdateModal
-        index={index}
         itemRef={itemRef}
         bill={bill}
         presentToast={presentToast}
