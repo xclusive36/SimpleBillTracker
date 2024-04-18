@@ -10,3 +10,7 @@ ion-card-subtitle {
 ion-card-title {
   font-size: 1rem;
 }
+
+.transition {
+  transition: all 1.3s ease;
+}

@@ -108,7 +108,7 @@ export const BillItem: React.FC<Props> = ({
   };
 
   return (
-    <>
+    <div>
       <IonItemSliding ref={itemRef}>
         <IonItemOptions
           side="start"
@@ -178,6 +178,6 @@ export const BillItem: React.FC<Props> = ({
         presentToast={presentToast}
         setSortedDataToState={setSortedDataToState}
       />
-    </>
+    </div>
   );
 };

@@ -58,12 +58,13 @@ export const BillList: React.FC<Props> = ({
   }
 
   return (
-    <>
+    <div className="transition">
       <Divider
         title={dividerTitle}
         operator={operator}
         setOperator={setOperator}
         toggle={toggleHidden}
+        hideList={hideList}
         disabled={
           billArray.length <= 1 ||
           filterItems(searchTerm, billArray).length === 0
@@ -121,6 +122,6 @@ export const BillList: React.FC<Props> = ({
           </IonButton>
         </div>
       )}
-    </>
+    </div>
   );
 };
