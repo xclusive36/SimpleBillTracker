@@ -118,7 +118,7 @@ export const BillList: React.FC<Props> = ({
             }}>
             {billsExpanded
               ? strings.BILL_COLLAPSE
-              : `${strings.BILL_COLLAPSE} ${billArray.length} ${strings.BILL_BILLS}`}
+              : `${strings.BILL_EXPAND} ${billArray.length} ${strings.BILL_BILLS}`}
           </IonButton>
         </div>
       )}
