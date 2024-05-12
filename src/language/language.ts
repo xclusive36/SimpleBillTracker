@@ -57,6 +57,8 @@ export const strings = new LocalizedStrings({
     BILLRESTORE_SUCCESS: "Bills restored successfully",
     BILLRESTORE_NO_DATA: "No data to restore",
     BILLRESTORE_FAILED: "Error restoring bills",
+    ONLINE_ALERT_MESSAGE:
+      "To remove online data, sign in. Local data will be removed",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Name is required",
@@ -361,6 +363,8 @@ export const strings = new LocalizedStrings({
     BILLRESTORE_SUCCESS: "Facturas restauradas con éxito",
     BILLRESTORE_NO_DATA: "No hay datos para restaurar",
     BILLRESTORE_FAILED: "Error al restaurar facturas",
+    ONLINE_ALERT_MESSAGE:
+      "Para eliminar los datos en línea, inicie sesión. Los datos locales se eliminarán",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Se requiere el nombre",
@@ -664,6 +668,8 @@ export const strings = new LocalizedStrings({
     BILLRESTORE_SUCCESS: "Factures restaurées avec succès",
     BILLRESTORE_NO_DATA: "Aucune donnée à restaurer",
     BILLRESTORE_FAILED: "Erreur lors de la restauration des factures",
+    ONLINE_ALERT_MESSAGE:
+      "Pour supprimer les données en ligne, connectez-vous. Les données locales seront supprimées",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Le nom est requis",
@@ -967,6 +973,8 @@ export const strings = new LocalizedStrings({
     BILLRESTORE_SUCCESS: "Rechnungen erfolgreich wiederhergestellt",
     BILLRESTORE_NO_DATA: "Keine Daten zum Wiederherstellen",
     BILLRESTORE_FAILED: "Fehler beim Wiederherstellen der Rechnungen",
+    ONLINE_ALERT_MESSAGE:
+      "Um Daten online zu löschen, melden Sie sich an. Lokale Daten werden gelöscht",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Name ist erforderlich",

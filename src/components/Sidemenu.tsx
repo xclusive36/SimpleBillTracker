@@ -68,7 +68,6 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
 
   const deleteBillsFromStorage = async () => {
     // Delete the bills object from the storage of the device
-
     presentAlert({
       // Call the presentAlert function
       header: strings.REMOVE_ALL_DATA, // Set the header of the alert to "Delete Bill?"
@@ -91,16 +90,29 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
               // Create a new handler for the delete button
               await store.remove("mybills"); // Remove the bills object from the storage of the device
               store.clear(); // Clear the storage of the device to remove any remaining data
-              const data = await getCollection({
-                reference: `user/${UserObj.user.uid}/bills`,
-              }); // Get the data from the Firestore database
-              if (data && data[0] && data[0].data) {
-                // Check if the data exists
-                await deleteDocument({
-                  reference: `user/${UserObj.user.uid}/bills/${data[0].id}`,
-                }); // Delete the data from the Firestore database
+
+              // check if user is logged in
+              if (UserObj.user) {
+                // check if firestore already has data for the user
+                const data = await getCollection({
+                  reference: `user/${UserObj.user.uid}/bills`,
+                }); // Get the data from the Firestore database
+                if (data && data[0] && data[0].data) {
+                  // Check if the data exists
+                  await deleteDocument({
+                    reference: `user/${UserObj.user.uid}/bills/${data[0].id}`,
+                  }); // Delete the data from the Firestore database
+                }
+                deleteUser(); // Call the deleteUser function
+              } else {
+                // alert user that to delete backed up data, they need to be logged in
+                presentAlert({
+                  // Call the presentAlert function
+                  header: strings.CLEAR_DATA, // Set the header of the alert to "Delete Backup?"
+                  message: strings.ONLINE_ALERT_MESSAGE, // Set the message of the alert to "You need to be logged in to delete backed up data."
+                  buttons: ["Okay"], // Set the buttons of the alert to ["Okay"]
+                });
               }
-              deleteUser(); // Call the deleteUser function
               presentToast("bottom", strings.DELETE_SUCCESS); // Call the presentToast function
               hapticsImpactLight(); // Trigger a light haptic feedback
               closeMenu(); // Call the closeMenu function
