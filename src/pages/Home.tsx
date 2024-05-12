@@ -8,7 +8,7 @@ import {
   useIonToast,
 } from "@ionic/react";
 import "./Home.css";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Bill } from "../interfaces/interfaces";
 import { sortSetArraysByDate } from "../utils/sortSetArraysByDate";
 import { Sidemenu } from "../components/Sidemenu";
@@ -31,30 +31,42 @@ import { getStoredData, store } from "../utils/storedData";
 import { strings } from "../language/language";
 import { AddModal } from "../components/AddModal";
 import { setAccessoryBarVisible } from "../capacitor/keyboard";
+import { AppContext } from "../context/context";
+import {
+  listenForAuthStateChanged,
+  removeAuthStateChangedListener,
+} from "../capacitor/firebase";
 
 const Home: React.FC = () => {
+  const { ContextObj, setContextObj } = useContext(AppContext); // Use the useContext hook to access the AppContext object
+  const [present] = useIonToast(); // Create a new toast using the useIonToast hook
+  const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
+  const upcomingBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the upcomingBills item
+  const pastDueBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the pastDueBills item
+  const paidBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the paidBills item
+  const [searchTerm, setSearchTerm] = useState<string>(""); // Create a new state called categorySearchTerm and set it to an empty string
+
   useEffect(() => {
+    // UseEffect hook runs on start. It listens for auth state changes
+    listenForAuthStateChanged(); // Listen for auth state changes
+
+    return () => {
+      removeAuthStateChangedListener(); // Remove the auth state change listener when the component unmounts
+    };
+  }, []);
+
+  useEffect(() => {
+    // UseEffect hook runs on start. It sets the accessory bar visible
     setAccessoryBarVisible(true);
     return () => {
       setAccessoryBarVisible(false);
     };
   }, []);
 
-  const [present] = useIonToast(); // Create a new toast using the useIonToast hook
-
-  const todaysBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the todaysBills item
-  const upcomingBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the upcomingBills item
-  const pastDueBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the pastDueBills item
-  const paidBillsRef = useRef<HTMLIonItemSlidingElement>(null); // Create a reference to the paidBills item
-
-  // Create and set the initial state of the component
-  const [todaysBills, setTodaysBills] = useState<Bill[]>([]); // Create a new state called todaysBills and set it as an empty array
-  const [upcomingBills, setUpcomingBills] = useState<Bill[]>([]); // Create a new state called upcomingBills and set it to an empty array
-  const [pastDueBills, setPastDueBills] = useState<Bill[]>([]); // Create a new state called pastDueBills and set it to an empty array
-  const [paidBills, setPaidBills] = useState<Bill[]>([]); // Create a new state called paidBills and set it to an empty array
-  const [searchTerm, setSearchTerm] = useState<string>(""); // Create a new state called categorySearchTerm and set it to an empty string
-
   useEffect(() => {
+    // UseEffect hook runs on start. It clears the badge count and checks for local notification permissions
+    // If permissions are granted, it adds the local notification received and action performed listeners
+    // If permissions are not granted, it requests them
     clearBadge(); // Clear the badge count when the component mounts
 
     // Check if localNotification permissions are granted
@@ -82,15 +94,22 @@ const Home: React.FC = () => {
   }, []);
 
   const setSortedDataToState = async (data: Bill[]) => {
+    // This function sorts the bills object by date and sets the sorted data to state
     const sortedData = sortSetArraysByDate(data); // Call the sortSetArraysByDate function and assign the returned object to a variable
 
-    setTodaysBills(sortedData.todaysArray); // Set to state the todaysBills array from the sortedData object
-    setUpcomingBills(sortedData.upcomingArray); // Set to state the upcomingBills array from the sortedData object
-    setPastDueBills(sortedData.pastDueArray); // Set to state the pastDueBills array from the sortedData object
-    setPaidBills(sortedData.paidArray); // Set to state the paidBills array from the sortedData object
+    setContextObj({
+      // Set the context object
+      ...ContextObj, // Spread the existing context object
+      allBills: data, // Set the allBills array to the data object
+      todaysBills: sortedData.todaysArray, // Set the todaysBills array to the todaysArray from the sortedData object
+      upcomingBills: sortedData.upcomingArray, // Set the upcomingBills array to the upcomingArray from the sortedData object
+      pastDueBills: sortedData.pastDueArray, // Set the pastDueBills array to the pastDueArray from the sortedData object
+      paidBills: sortedData.paidArray, // Set the paidBills array to the paidArray from the sortedData object
+    });
   };
 
   useEffect(() => {
+    // UseEffect hook runs on start. It gets the stored data and sets the sorted data to state every minute
     const interval = setInterval(() => {
       // Create a new interval
       getStoredData().then((data) => {
@@ -125,6 +144,7 @@ const Home: React.FC = () => {
     date: string,
     extra?: any
   ) => {
+    // This async function schedules a new local notification with a title, body, date, and any extra data
     return scheduleLocalNotification(title, body, date, extra);
   };
 
@@ -219,20 +239,15 @@ const Home: React.FC = () => {
             </IonToolbar>
           </IonHeader>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <Stats
-            todaysBills={todaysBills}
-            upcomingBills={upcomingBills}
-            pastDueBills={pastDueBills}
-            paidBills={paidBills}
-          />
+          <Stats />
           <AddModal
             presentToast={presentToast}
             setSortedDataToState={setSortedDataToState}
           />
           <IonList>
-            {pastDueBills && pastDueBills.length > 0 && (
+            {ContextObj.pastDueBills && ContextObj.pastDueBills.length > 0 && (
               <BillList
-                billArray={pastDueBills}
+                billArray={ContextObj.pastDueBills}
                 searchTerm={searchTerm}
                 billRef={pastDueBillsRef}
                 presentToast={presentToast}
@@ -242,9 +257,9 @@ const Home: React.FC = () => {
                 color="danger"
               />
             )}
-            {todaysBills && todaysBills.length > 0 && (
+            {ContextObj.todaysBills && ContextObj.todaysBills.length > 0 && (
               <BillList
-                billArray={todaysBills}
+                billArray={ContextObj.todaysBills}
                 searchTerm={searchTerm}
                 billRef={todaysBillsRef}
                 presentToast={presentToast}
@@ -255,7 +270,7 @@ const Home: React.FC = () => {
               />
             )}
             <BillList
-              billArray={upcomingBills}
+              billArray={ContextObj.upcomingBills}
               searchTerm={searchTerm}
               billRef={upcomingBillsRef}
               presentToast={presentToast}
@@ -264,7 +279,7 @@ const Home: React.FC = () => {
               dividerTitle={strings.BILL_UPCOMING_DIVIDER}
             />
             <BillList
-              billArray={paidBills}
+              billArray={ContextObj.paidBills}
               searchTerm={searchTerm}
               billRef={paidBillsRef}
               presentToast={presentToast}

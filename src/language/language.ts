@@ -43,6 +43,11 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Clear Data",
     REMOVE_ALL_DATA: "Remove All Data",
     RESET_SUBHEADER: "Are you sure?",
+    BACKUP: "Backup",
+    BACKUP_HEADER: "Backup Data",
+    BACKUP_SUBHEADER: "This will replace any existing backup",
+    BACKUP_SUCCESS: "Bills backed up successfully",
+    BACKUP_FAILED: "Error backing up",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Name is required",
@@ -332,6 +337,12 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Borrar datos",
     REMOVE_ALL_DATA: "Eliminar todos los datos",
     RESET_SUBHEADER: "¿Estás seguro?",
+    BACKUP: "Respaldo",
+    BACKUP_HEADER: "Los datos de copia de seguridad",
+    BACKUP_SUBHEADER:
+      "Esto reemplazará cualquier copia de seguridad existente.",
+    BACKUP_SUCCESS: "Bills backed up successfully",
+    BACKUP_FAILED: "Error al hacer copia de seguridad",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Se requiere el nombre",
@@ -621,6 +632,11 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Effacer les données",
     REMOVE_ALL_DATA: "Supprimer toutes les données",
     RESET_SUBHEADER: "Êtes-vous sûr?",
+    BACKUP: "Sauvegarde",
+    BACKUP_HEADER: "Sauvegarde des données",
+    BACKUP_SUBHEADER: "Cela remplacera toute sauvegarde existante",
+    BACKUP_SUCCESS: "Factures sauvegardées avec succès",
+    BACKUP_FAILED: "Erreur de sauvegarde",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Le nom est requis",
@@ -910,6 +926,11 @@ export const strings = new LocalizedStrings({
     CLEAR_DATA: "Daten löschen",
     REMOVE_ALL_DATA: "Alle Daten entfernen",
     RESET_SUBHEADER: "Bist du sicher?",
+    BACKUP: "Sicherung",
+    BACKUP_HEADER: "Backup-Daten",
+    BACKUP_SUBHEADER: "Dadurch wird jedes vorhandene Backup ersetzt",
+    BACKUP_SUCCESS: "Rechnungen erfolgreich gesichert",
+    BACKUP_FAILED: "Fehler beim Sichern",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Name ist erforderlich",

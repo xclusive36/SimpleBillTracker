@@ -1,7 +1,4 @@
 import {
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
   IonCol,
@@ -9,25 +6,21 @@ import {
   IonRow,
 } from "@ionic/react";
 import { reduceCount } from "../utils/reduceCount";
-import { Bill } from "../interfaces/interfaces";
 import { strings } from "../language/language";
+import { useContext } from "react";
+import { AppContext } from "../context/context";
 
-interface Props {
-  todaysBills: Bill[];
-  upcomingBills: Bill[];
-  pastDueBills: Bill[];
-  paidBills: Bill[];
-}
+export const Stats: React.FC = () => {
+  const { ContextObj } = useContext(AppContext);
+  const { todaysBills, upcomingBills, pastDueBills, paidBills } = ContextObj;
 
-export const Stats: React.FC<Props> = ({
-  todaysBills,
-  upcomingBills,
-  pastDueBills,
-  paidBills,
-}) => {
   return (
     <IonGrid>
-      <IonRow style={{ borderTop: "1px solid var(--ion-color-light)", padding: ".5rem" }}>
+      <IonRow
+        style={{
+          borderTop: "1px solid var(--ion-color-light)",
+          padding: ".5rem",
+        }}>
         <IonCol>
           <div
             style={{
@@ -67,7 +60,11 @@ export const Stats: React.FC<Props> = ({
           </div>
         </IonCol>
       </IonRow>
-      <IonRow style={{ borderTop: "1px solid var(--ion-color-light)", padding: ".5rem" }}>
+      <IonRow
+        style={{
+          borderTop: "1px solid var(--ion-color-light)",
+          padding: ".5rem",
+        }}>
         <IonCol>
           <div
             style={{

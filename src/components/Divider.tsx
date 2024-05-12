@@ -1,5 +1,9 @@
 import { IonButton, IonIcon, IonItemDivider, IonLabel } from "@ionic/react";
-import { caretDownOutline, caretForwardOutline, swapVerticalOutline } from "ionicons/icons";
+import {
+  caretDownOutline,
+  caretForwardOutline,
+  swapVerticalOutline,
+} from "ionicons/icons";
 import { ReactNode } from "react";
 
 interface Props {
@@ -32,9 +36,7 @@ export const Divider: React.FC<Props> = ({
           <IonIcon icon={caretDownOutline} />
         )}
       </IonButton>
-      <IonLabel>
-        <small>{title}</small>
-      </IonLabel>
+      <IonLabel>{title}</IonLabel>
       <IonButton
         disabled={disabled}
         fill="clear"

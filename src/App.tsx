@@ -1,8 +1,11 @@
 import { Redirect, Route } from "react-router-dom";
 import { IonApp, IonRouterOutlet, setupIonicReact } from "@ionic/react";
 import { IonReactRouter } from "@ionic/react-router";
+import { AppProvider } from "./context/context";
 
 import Home from "./pages/Home";
+import Tos from "./pages/Tos";
+import Privacy from "./pages/Privacy";
 
 /* Core CSS required for Ionic components to work properly */
 import "@ionic/react/css/core.css";
@@ -22,8 +25,7 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import Tos from "./pages/Tos";
-import Privacy from "./pages/Privacy";
+import { UserProvider } from "./context/userContext";
 
 setupIonicReact();
 
@@ -32,18 +34,22 @@ const App: React.FC = () => {
     <IonApp>
       <IonReactRouter>
         <IonRouterOutlet>
-          <Route exact path="/home">
-            <Home />
-          </Route>
-          <Route exact path="/">
-            <Redirect to="/home" />
-          </Route>
-          <Route exact path="/tos">
-            <Tos />
-          </Route>
-          <Route exact path="/privacy">
-            <Privacy />
-          </Route>
+          <AppProvider>
+            <UserProvider>
+              <Route exact path="/home">
+                <Home />
+              </Route>
+              <Route exact path="/">
+                <Redirect to="/home" />
+              </Route>
+              <Route exact path="/tos">
+                <Tos />
+              </Route>
+              <Route exact path="/privacy">
+                <Privacy />
+              </Route>
+            </UserProvider>
+          </AppProvider>
         </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>

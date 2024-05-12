@@ -1,8 +1,7 @@
 import { Capacitor } from "@capacitor/core";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import { increaseBadge } from "./badge";
-import BEEP from "../assets/beep.mp3";
-import SMALL_ICON from "../assets/icon-76.png";
+import SMALL_ICON from "../assets/Icon-76.png";
 import LARGE_ICON from "../assets/Icon-60@3x.png";
 
 export const scheduleLocalNotification = async (
@@ -48,7 +47,6 @@ export const scheduleLocalNotification = async (
           id: Math.floor(Math.random() * 100),
           title: title,
           body: body,
-          sound: BEEP,
           schedule: { at: new Date(convertDateToString(date)), repeats: false },
           extra: { id: extra },
           smallIcon: SMALL_ICON,
