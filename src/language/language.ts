@@ -48,6 +48,15 @@ export const strings = new LocalizedStrings({
     BACKUP_SUBHEADER: "This will replace any existing backup",
     BACKUP_SUCCESS: "Bills backed up successfully",
     BACKUP_FAILED: "Error backing up",
+    DELETE_SUCCESS: "All data has been deleted",
+    DELETE_FAILED: "Error deleting data",
+    SIGNIN_SUCCESS: "Sign in successful",
+    SIGNIN_FAILED: "Error signing in",
+    SIGNOUT_SUCCESS: "Sign out successful",
+    SIGNOUT_FAILED: "Error signing out",
+    BILLRESTORE_SUCCESS: "Bills restored successfully",
+    BILLRESTORE_NO_DATA: "No data to restore",
+    BILLRESTORE_FAILED: "Error restoring bills",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Name is required",
@@ -343,6 +352,15 @@ export const strings = new LocalizedStrings({
       "Esto reemplazará cualquier copia de seguridad existente.",
     BACKUP_SUCCESS: "Bills backed up successfully",
     BACKUP_FAILED: "Error al hacer copia de seguridad",
+    DELETE_SUCCESS: "Todos los datos han sido eliminados",
+    DELETE_FAILED: "Error al eliminar datos",
+    SIGNIN_SUCCESS: "Iniciar sesión exitoso",
+    SIGNIN_FAILED: "Error al iniciar sesión",
+    SIGNOUT_SUCCESS: "Cierre de sesión exitoso",
+    SIGNOUT_FAILED: "Error al cerrar sesión",
+    BILLRESTORE_SUCCESS: "Facturas restauradas con éxito",
+    BILLRESTORE_NO_DATA: "No hay datos para restaurar",
+    BILLRESTORE_FAILED: "Error al restaurar facturas",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Se requiere el nombre",
@@ -637,6 +655,15 @@ export const strings = new LocalizedStrings({
     BACKUP_SUBHEADER: "Cela remplacera toute sauvegarde existante",
     BACKUP_SUCCESS: "Factures sauvegardées avec succès",
     BACKUP_FAILED: "Erreur de sauvegarde",
+    DELETE_SUCCESS: "Toutes les données ont été supprimées",
+    DELETE_FAILED: "Erreur lors de la suppression des données",
+    SIGNIN_SUCCESS: "Connecté avec succès",
+    SIGNIN_FAILED: "Échec de la connexion",
+    SIGNOUT_SUCCESS: "Déconnexion réussie",
+    SIGNOUT_FAILED: "Échec de la déconnexion",
+    BILLRESTORE_SUCCESS: "Factures restaurées avec succès",
+    BILLRESTORE_NO_DATA: "Aucune donnée à restaurer",
+    BILLRESTORE_FAILED: "Erreur lors de la restauration des factures",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Le nom est requis",
@@ -931,6 +958,15 @@ export const strings = new LocalizedStrings({
     BACKUP_SUBHEADER: "Dadurch wird jedes vorhandene Backup ersetzt",
     BACKUP_SUCCESS: "Rechnungen erfolgreich gesichert",
     BACKUP_FAILED: "Fehler beim Sichern",
+    DELETE_SUCCESS: "Alle Daten wurden gelöscht",
+    DELETE_FAILED: "Fehler beim Löschen der Daten",
+    SIGNIN_SUCCESS: "Erfolgreich angemeldet",
+    SIGNIN_FAILED: "Anmeldung fehlgeschlagen",
+    SIGNOUT_SUCCESS: "Abmeldung erfolgreich",
+    SIGNOUT_FAILED: "Abmeldung fehlgeschlagen",
+    BILLRESTORE_SUCCESS: "Rechnungen erfolgreich wiederhergestellt",
+    BILLRESTORE_NO_DATA: "Keine Daten zum Wiederherstellen",
+    BILLRESTORE_FAILED: "Fehler beim Wiederherstellen der Rechnungen",
 
     // components/AddModal.tsx
     REQUIRED_NAME: "Name ist erforderlich",

@@ -28,6 +28,7 @@ import APPLE_DARK from "../assets/appleid_button@2x-dark.png";
 import {
   addDocument,
   deleteDocument,
+  deleteUser,
   getCollection,
   getCurrentUser,
   getDocument,
@@ -99,14 +100,15 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
                   reference: `user/${UserObj.user.uid}/bills/${data[0].id}`,
                 }); // Delete the data from the Firestore database
               }
-              presentToast("bottom", "Bills cleared from storage successfully"); // Call the presentToast function
+              deleteUser(); // Call the deleteUser function
+              presentToast("bottom", strings.DELETE_SUCCESS); // Call the presentToast function
               hapticsImpactLight(); // Trigger a light haptic feedback
               closeMenu(); // Call the closeMenu function
               window.location.reload(); // Reload the window to update the UI
             } catch (error) {
               console.error(error); // Log the error to the console
               hapticsImpactLight(); // Trigger a light haptic feedback
-              presentToast("bottom", "Failed to clear bills from storage"); // Call the presentToast function
+              presentToast("bottom", strings.DELETE_FAILED); // Call the presentToast function
             }
           },
         },
@@ -126,11 +128,11 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
       setIsLoggedIn(true);
       setUserObj({ user: result }); // Set the user object in the UserContext to the result
       hapticsImpactLight(); // Trigger a light haptic feedback
-      presentToast("bottom", "Signed in successfully"); // Call the presentToast function
+      presentToast("bottom", strings.SIGNIN_SUCCESS); // Call the presentToast function
     } catch (error) {
       console.error(error); // Log the error to the console
       hapticsImpactLight(); // Trigger a light haptic feedback
-      presentToast("bottom", "Failed to sign in"); // Call the presentToast function
+      presentToast("bottom", strings.SIGNIN_FAILED); // Call the presentToast function
     }
   };
 
@@ -143,11 +145,11 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
       setIsLoggedIn(false);
       setUserObj({}); // Set the user object to an empty object
       hapticsImpactLight(); // Trigger a light haptic feedback
-      presentToast("bottom", "Signed out successfully"); // Call the presentToast function
+      presentToast("bottom", strings.SIGNOUT_SUCCESS); // Call the presentToast function
     } catch (error) {
       console.error(error); // Log the error to the console
       hapticsImpactLight(); // Trigger a light haptic feedback
-      presentToast("bottom", "Failed to sign out"); // Call the presentToast function
+      presentToast("bottom", strings.SIGNOUT_FAILED); // Call the presentToast function
     }
   };
 
@@ -254,16 +256,16 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
           paidBills: sortedData.paidArray, // Set the paidBills array to the paidArray from the sortedData object
         });
 
-        presentToast("bottom", "Bills restored successfully"); // Call the presentToast function
+        presentToast("bottom", strings.BILLRESTORE_SUCCESS); // Call the presentToast function
         hapticsImpactLight(); // Trigger a light haptic feedback
       } else {
-        presentToast("bottom", "No data found to restore"); // Call the presentToast function
+        presentToast("bottom", strings.BILLRESTORE_NO_DATA); // Call the presentToast function
         hapticsImpactLight(); // Trigger a light haptic feedback
       }
     } catch (error) {
       console.error(error); // Log the error to the console
       hapticsImpactLight(); // Trigger a light haptic feedback
-      presentToast("bottom", "Failed to restore bills"); // Call the presentToast function
+      presentToast("bottom", strings.BILLRESTORE_FAILED); // Call the presentToast function
     }
   };
 
