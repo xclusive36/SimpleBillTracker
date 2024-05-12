@@ -27,6 +27,7 @@ import APPLE from "../assets/appleid_button@2x.png";
 import APPLE_DARK from "../assets/appleid_button@2x-dark.png";
 import {
   addDocument,
+  deleteDocument,
   getCollection,
   getCurrentUser,
   getDocument,
@@ -85,13 +86,28 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
         {
           text: strings.DELETE,
           handler: async () => {
-            // Create a new handler for the delete button
-            await store.remove("mybills"); // Remove the bills object from the storage of the device
-            store.clear(); // Clear the storage of the device to remove any remaining data
-            presentToast("bottom", "Bills cleared from storage successfully"); // Call the presentToast function
-            hapticsImpactLight(); // Trigger a light haptic feedback
-            closeMenu(); // Call the closeMenu function
-            window.location.reload(); // Reload the window to update the UI
+            try {
+              // Create a new handler for the delete button
+              await store.remove("mybills"); // Remove the bills object from the storage of the device
+              store.clear(); // Clear the storage of the device to remove any remaining data
+              const data = await getCollection({
+                reference: `user/${UserObj.user.uid}/bills`,
+              }); // Get the data from the Firestore database
+              if (data && data[0] && data[0].data) {
+                // Check if the data exists
+                await deleteDocument({
+                  reference: `user/${UserObj.user.uid}/bills/${data[0].id}`,
+                }); // Delete the data from the Firestore database
+              }
+              presentToast("bottom", "Bills cleared from storage successfully"); // Call the presentToast function
+              hapticsImpactLight(); // Trigger a light haptic feedback
+              closeMenu(); // Call the closeMenu function
+              window.location.reload(); // Reload the window to update the UI
+            } catch (error) {
+              console.error(error); // Log the error to the console
+              hapticsImpactLight(); // Trigger a light haptic feedback
+              presentToast("bottom", "Failed to clear bills from storage"); // Call the presentToast function
+            }
           },
         },
       ],
@@ -148,6 +164,7 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
   };
 
   useEffect(() => {
+    // Check the login status when the component mounts so that the login status is set to context if the user has previously logged in
     checkLoginStatus();
   }, []);
 
@@ -218,29 +235,35 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
 
   const restoreData = async () => {
     // Restore the bills data from the cloud and save it to the storage of the device
-    const data = await getCollection({
-      reference: `user/${UserObj.user.uid}/bills`,
-    }); // Get the data from the Firestore database
-    if (data && data[0] && data[0].data) {
-      // Check if the data exists
-      store.set("mybills", data[0].data.bills); // Set the data to the storage of the device
-      // set to context
-      const sortedData = sortSetArraysByDate(data[0].data.bills); // Call the sortSetArraysByDate function and assign the returned object to a variable
+    try {
+      const data = await getCollection({
+        reference: `user/${UserObj.user.uid}/bills`,
+      }); // Get the data from the Firestore database
+      if (data && data[0] && data[0].data) {
+        // Check if the data exists
+        store.set("mybills", data[0].data.bills); // Set the data to the storage of the device
+        // set to context
+        const sortedData = sortSetArraysByDate(data[0].data.bills); // Call the sortSetArraysByDate function and assign the returned object to a variable
 
-      setContextObj({
-        // Set the context object
-        allBills: data[0].data.bills, // Set the allBills array to the data object
-        todaysBills: sortedData.todaysArray, // Set the todaysBills array to the todaysArray from the sortedData object
-        upcomingBills: sortedData.upcomingArray, // Set the upcomingBills array to the upcomingArray from the sortedData object
-        pastDueBills: sortedData.pastDueArray, // Set the pastDueBills array to the pastDueArray from the sortedData object
-        paidBills: sortedData.paidArray, // Set the paidBills array to the paidArray from the sortedData object
-      });
+        setContextObj({
+          // Set the context object
+          allBills: data[0].data.bills, // Set the allBills array to the data object
+          todaysBills: sortedData.todaysArray, // Set the todaysBills array to the todaysArray from the sortedData object
+          upcomingBills: sortedData.upcomingArray, // Set the upcomingBills array to the upcomingArray from the sortedData object
+          pastDueBills: sortedData.pastDueArray, // Set the pastDueBills array to the pastDueArray from the sortedData object
+          paidBills: sortedData.paidArray, // Set the paidBills array to the paidArray from the sortedData object
+        });
 
-      presentToast("bottom", "Bills restored successfully"); // Call the presentToast function
+        presentToast("bottom", "Bills restored successfully"); // Call the presentToast function
+        hapticsImpactLight(); // Trigger a light haptic feedback
+      } else {
+        presentToast("bottom", "No data found to restore"); // Call the presentToast function
+        hapticsImpactLight(); // Trigger a light haptic feedback
+      }
+    } catch (error) {
+      console.error(error); // Log the error to the console
       hapticsImpactLight(); // Trigger a light haptic feedback
-    } else {
-      presentToast("bottom", "No data found to restore"); // Call the presentToast function
-      hapticsImpactLight(); // Trigger a light haptic feedback
+      presentToast("bottom", "Failed to restore bills"); // Call the presentToast function
     }
   };
 
