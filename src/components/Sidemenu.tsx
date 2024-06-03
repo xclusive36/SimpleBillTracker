@@ -173,7 +173,7 @@ export const Sidemenu: React.FC<Props> = ({ store }) => {
         setIsLoggedIn(true);
       }
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
   };
 

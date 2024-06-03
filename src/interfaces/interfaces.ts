@@ -4,5 +4,6 @@ export interface Bill {
   type: string;
   amount: number;
   dueDate: string;
+  repeat?: string;
   paid: boolean;
 }

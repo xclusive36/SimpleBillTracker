@@ -5,7 +5,10 @@ import {
   IonDatetime,
   IonHeader,
   IonInput,
+  IonItem,
   IonModal,
+  IonSelect,
+  IonSelectOption,
   IonText,
   IonTitle,
   IonToolbar,
@@ -36,6 +39,7 @@ export const UpdateModal: React.FC<Props> = ({
   const billCategory = useRef<HTMLIonInputElement>(null);
   const billOwed = useRef<HTMLIonInputElement>(null);
   const billDate = useRef<HTMLIonDatetimeElement>(null);
+  const billRepeat = useRef<HTMLIonSelectElement>(null);
 
   function confirm() {
     let date = new Date();
@@ -56,6 +60,7 @@ export const UpdateModal: React.FC<Props> = ({
       type: (billCategory.current?.value as string).trim() || "",
       amount: (billOwed.current?.value as number) || 0,
       dueDate: formattedDate,
+      repeat: (billRepeat.current?.value as string) || "Never",
       paid: bill.paid,
     };
 
@@ -125,12 +130,50 @@ export const UpdateModal: React.FC<Props> = ({
             alignItems: "center",
             width: "100%",
             backgroundColor: "var(--ion-color-light, #f4f5f8)",
+            margin: "1rem 0",
           }}>
           <IonDatetime
             className="ion-margin"
             ref={billDate}
             presentation="date"></IonDatetime>
         </div>
+        <IonItem>
+          <IonSelect
+            ref={billRepeat}
+            label={`${strings.BILL_REPEATS}:`}
+            placeholder="Never">
+            <IonSelectOption value="Never">
+              {strings.BILL_REPEATS_NEVER}
+            </IonSelectOption>
+            <IonSelectOption value="Week">
+              {strings.BILL_REPEATS_WEEK}
+            </IonSelectOption>
+            <IonSelectOption value="2Week">
+              {strings.BILL_REPEATS_2WEEK}
+            </IonSelectOption>
+            <IonSelectOption value="4Week">
+              {strings.BILL_REPEATS_4WEEK}
+            </IonSelectOption>
+            <IonSelectOption value="Month">
+              {strings.BILL_REPEATS_MONTH}
+            </IonSelectOption>
+            <IonSelectOption value="2Month">
+              {strings.BILL_REPEATS_2MONTH}
+            </IonSelectOption>
+            <IonSelectOption value="3Month">
+              {strings.BILL_REPEATS_3MONTH}
+            </IonSelectOption>
+            <IonSelectOption value="4Month">
+              {strings.BILL_REPEATS_4MONTH}
+            </IonSelectOption>
+            <IonSelectOption value="6Month">
+              {strings.BILL_REPEATS_6MONTH}
+            </IonSelectOption>
+            <IonSelectOption value="Year">
+              {strings.BILL_REPEATS_YEARLY}
+            </IonSelectOption>
+          </IonSelect>
+        </IonItem>
       </IonContent>
     </IonModal>
   );

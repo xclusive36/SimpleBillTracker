@@ -1,5 +1,4 @@
 import {
-  IonCardSubtitle,
   IonCardTitle,
   IonIcon,
   IonItem,
@@ -10,7 +9,6 @@ import {
   IonText,
   useIonAlert,
 } from "@ionic/react";
-import { ReactNode } from "react";
 import { Bill } from "../interfaces/interfaces";
 import { convertDateToString } from "../utils/convertDateToString";
 import { hapticsImpactLight } from "../capacitor/haptics";
@@ -74,6 +72,11 @@ export const BillItem: React.FC<Props> = ({
           value: bill.amount,
         },
         {
+          placeholder: strings.BILL_REPEATS,
+          id: "repeat",
+          value: bill.repeat || "Never",
+        },
+        {
           type: "date",
           id: "dueDate",
           value: bill.dueDate,
@@ -88,7 +91,7 @@ export const BillItem: React.FC<Props> = ({
         {
           text: strings.ALERT_OKAY,
           role: "confirm",
-          handler: (data) => {
+          handler: (data: any[]) => {
             hapticsImpactLight(); // Trigger a light haptic feedback
             const billObj: Bill = {
               id: bill.id,
@@ -96,6 +99,7 @@ export const BillItem: React.FC<Props> = ({
               type: data[1],
               amount: data[2],
               dueDate: data[3],
+              repeat: data[4],
               paid: bill.paid,
             };
             updateBill(billObj, presentToast, setSortedDataToState).then(() =>
